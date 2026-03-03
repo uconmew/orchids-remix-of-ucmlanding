@@ -79,19 +79,20 @@ export default function StaffSection({ isVisible, isLandscape }: StaffSectionPro
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
             {teamMembers.map((member, index) => (
               <Card key={member.name} className={`hover-lift h-full bg-card transition-all duration-700 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: `${800 + index * 200}ms` }}>
-                <CardHeader>
-                  <div className="w-full h-48 rounded-lg overflow-hidden mb-4 relative bg-muted">
-                    <Image
-                      src={member.image}
-                      alt={member.name}
-                      fill
-                      className="object-cover"
-                      style={member.name === "Nicole Hedges" ? { objectPosition: "center 100%" } : undefined}
-                    />
-                  </div>
-                  <CardTitle className="text-center text-xl">{member.name}</CardTitle>
-                  <CardDescription className="text-center">{member.role}</CardDescription>
-                </CardHeader>
+                  <CardHeader>
+                    <div className="w-full aspect-[1358/1393] rounded-lg overflow-hidden mb-4 relative bg-muted">
+                      <Image
+                        src={member.image}
+                        alt={member.name}
+                        fill
+                        className="object-cover"
+                        style={member.name === "Nicole Hedges" ? { objectPosition: "center 100%" } : undefined}
+                      />
+                    </div>
+                    <CardTitle className="text-center text-xl">{member.name}</CardTitle>
+                    <CardDescription className="text-center">{member.role}</CardDescription>
+                  </CardHeader>
+
                 <CardContent className="text-center">
                   <p className="text-sm text-muted-foreground mb-3 line-clamp-4 max-h-20 overflow-y-auto text-left px-2 !font-normal">{member.description}</p>
                   <div className="flex flex-wrap gap-2 justify-center">
@@ -135,7 +136,7 @@ export default function StaffSection({ isVisible, isLandscape }: StaffSectionPro
                     >
                       <Card className={`hover-lift h-full ${isPulsing ? 'ring-4 ring-[#A92FFA] shadow-2xl' : ''} ${allCardsPulsing ? 'ring-4 ring-[#A92FFA] shadow-[0_0_30px_rgba(169,47,250,0.6),0_0_60px_rgba(242,140,40,0.4)]' : ''}`}>
                         <CardHeader>
-                          <div className="w-full h-48 rounded-lg overflow-hidden mb-4 relative">
+                          <div className="w-full aspect-[1358/1393] rounded-lg overflow-hidden mb-4 relative">
                             <Image
                               src={member.image}
                               alt={member.name}

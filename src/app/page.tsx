@@ -120,7 +120,22 @@ function HomePageContent() {
     prayersCount: 0,
     communityPrayers: 0,
     messageCount: 0,
-    activeMentors: 0
+    activeMentors: 0,
+    weekProgram: "64",
+    leadershipTiers: "4",
+    supportAvailability: "24/7",
+    unconditionalAcceptance: "100%",
+    daysOfSupport: "365",
+    communityUnited: "1",
+    serviceCompletionRate: "94%",
+    sobrietyRate: "87%",
+    employmentRate: "78%",
+    stableHousingRate: "92%",
+    satisfactionRate: "98%",
+    visionaryExperienceYears: "8",
+    sobrietyFollowupMonths: "12+",
+    employmentTimelineDays: "90",
+    housingRetentionMonths: "6+"
   });
 
   // NEW: Live partner counts state
@@ -256,8 +271,8 @@ function HomePageContent() {
   {
     name: "Founding Visionary Lead",
     role: "Founder & Executive Director",
-    image: "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/20250713_161156-1-1763993852854.jpg?width=8000&height=8000&resize=contain",
-    description: "Founded Ucon Ministries after personal transformation from addiction and justice system involvement. Leads strategic vision and ministry direction with 8 years of biblical experience and lived recovery journey.",
+    image: "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/20250713_161156-1-1763993852854.jpg?width=1358&height=1393&resize=cover",
+    description: `Founded Ucon Ministries after personal transformation from addiction and justice system involvement. Leads strategic vision and ministry direction with ${liveStats.visionaryExperienceYears} years of biblical experience and lived recovery journey.`,
     badges: ["Ministry Founder", "LDI Developer", "Peer Equal"]
   },
   {
@@ -268,30 +283,30 @@ function HomePageContent() {
     badges: ["M.Div. Theology", "Biblical Counselor", "SME"]
   },
   {
-    name: "Clinical Director",
+    name: "Clinical Formation Director",
     role: "Mental Health & Clinical Excellence",
-    image: "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/320x400-1-1766235599644.jpeg?width=8000&height=8000&resize=contain",
+    image: "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/320x400-1-1766235599644.jpeg?width=1358&height=1393&resize=cover",
     description: "Licensed clinical psychologist specializing in addiction recovery and trauma treatment, integrating evidence-based practices with faith-based principles.",
     badges: ["Clinical Psychology", "Trauma-Informed Care", "SME"]
   },
   {
     name: "Multiplication Director",
     role: "Ministry Programs",
-    image: "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/Screenshot_20251124_071419_Facebook-1763993696703.jpg?width=8000&height=8000&resize=contain",
+    image: "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/Screenshot_20251124_071419_Facebook-1763993696703.jpg?width=1358&height=1393&resize=cover",
     description: "Oversees multiplication of ministry programs across all tiers and tracks, ensuring program quality, participant transformation success, and scalable impact.",
     badges: ["LDI Developer", "Purpose Driven"]
   },
   {
     name: "Frontline Director",
     role: "Lived Experience",
-    image: "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/Screenshot_20251124_072456_Gallery-1763994324892.jpg?width=8000&height=8000&resize=contain",
-    description: "Leads Track 3 outreach initiatives, coordinating volunteers and ensuring immediate crisis response to community needs 24/7. Social Work Community Organizer",
+    image: "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/Screenshot_20251124_072456_Gallery-1763994324892.jpg?width=1358&height=1393&resize=cover",
+    description: `Leads Track 3 outreach initiatives, coordinating volunteers and ensuring immediate crisis response to community needs ${liveStats.supportAvailability}. Social Work Community Organizer`,
     badges: ["Outreach Director", "Community Bridge", "Lived Experience"]
   },
   {
     name: "Ucon Ambassador",
     role: "Convict Commit",
-    image: "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/Screenshot_20251124_072323_Gallery-1763994456744.jpg?width=8000&height=8000&resize=contain",
+    image: "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/Screenshot_20251124_072323_Gallery-1763994456744.jpg?width=1358&height=1393&resize=cover",
     description: "As Brand Ambassador and lived-experience leader, I embody the transformative power of hope and connection. I bridge the gap between our mission and the community, showing that through radical love and persistent effort, every 'convict' can become a catalyst for profound change.",
     badges: ["Brand Ambassador", "Community Relations", "Lived Experience"]
   }]);
@@ -701,35 +716,35 @@ function HomePageContent() {
                 </div>
               </motion.div>
                 
-              {/* Hero Stats Grid */}
-              <div className={`mt-12 sm:mt-16 grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 w-full transition-all duration-1000 delay-[500ms] ${
-              heroAnimationComplete ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8 pointer-events-none'}`
-              }>
-                <Card className={`bg-[#A92FFA] text-white hover-lift transition-all duration-1000 ${heroVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '600ms' }}>
-                  <CardHeader className="p-3 sm:p-4">
-                    <CardTitle className="text-lg sm:text-xl md:text-2xl font-bold text-center text-white !whitespace-pre-line">Projection </CardTitle>
-                    <CardDescription className="text-white/80 text-center text-xs sm:text-sm">Lives Transformed</CardDescription>
-                  </CardHeader>
-                </Card>
-                <Card className={`bg-[#F28C28] text-white hover-lift transition-all duration-1000 ${heroVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '700ms' }}>
-                  <CardHeader className="p-3 sm:p-4">
-                    <CardTitle className="text-lg sm:text-xl md:text-2xl font-bold text-center text-white">64</CardTitle>
-                    <CardDescription className="text-white/80 text-center text-xs sm:text-sm">Week Program</CardDescription>
-                  </CardHeader>
-                </Card>
-                <Card className={`bg-gradient-to-br from-[#A92FFA] to-[#F28C28] text-white hover-lift transition-all duration-1000 ${heroVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '800ms' }}>
-                  <CardHeader className="p-3 sm:p-4">
-                    <CardTitle className="text-lg sm:text-xl md:text-2xl font-bold text-center text-white">4</CardTitle>
-                    <CardDescription className="text-white/80 text-center text-xs sm:text-sm">Leadership Tiers</CardDescription>
-                  </CardHeader>
-                </Card>
-                <Card className={`hover-lift transition-all duration-1000 ${heroVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '900ms' }}>
-                  <CardHeader className="p-3 sm:p-4">
-                    <CardTitle className="text-lg sm:text-xl md:text-2xl font-bold text-center">24/7</CardTitle>
-                    <CardDescription className="text-center text-xs sm:text-sm">Support Available</CardDescription>
-                  </CardHeader>
-                </Card>
-              </div>
+                {/* Hero Stats Grid */}
+                <div className={`mt-12 sm:mt-16 grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 w-full transition-all duration-1000 delay-[500ms] ${
+                heroAnimationComplete ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8 pointer-events-none'}`
+                }>
+                  <Card className={`bg-[#A92FFA] text-white hover-lift transition-all duration-1000 ${heroVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '600ms' }}>
+                    <CardHeader className="p-3 sm:p-4">
+                      <CardTitle className="text-lg sm:text-xl md:text-2xl font-bold text-center text-white !whitespace-pre-line">{liveStats.livesTransformed}</CardTitle>
+                      <CardDescription className="text-white/80 text-center text-xs sm:text-sm">Lives Transformed</CardDescription>
+                    </CardHeader>
+                  </Card>
+                  <Card className={`bg-[#F28C28] text-white hover-lift transition-all duration-1000 ${heroVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '700ms' }}>
+                    <CardHeader className="p-3 sm:p-4">
+                      <CardTitle className="text-lg sm:text-xl md:text-2xl font-bold text-center text-white">{liveStats.weekProgram}</CardTitle>
+                      <CardDescription className="text-white/80 text-center text-xs sm:text-sm">Week Program</CardDescription>
+                    </CardHeader>
+                  </Card>
+                  <Card className={`bg-gradient-to-br from-[#A92FFA] to-[#F28C28] text-white hover-lift transition-all duration-1000 ${heroVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '800ms' }}>
+                    <CardHeader className="p-3 sm:p-4">
+                      <CardTitle className="text-lg sm:text-xl md:text-2xl font-bold text-center text-white">{liveStats.leadershipTiers}</CardTitle>
+                      <CardDescription className="text-white/80 text-center text-xs sm:text-sm">Leadership Tiers</CardDescription>
+                    </CardHeader>
+                  </Card>
+                  <Card className={`hover-lift transition-all duration-1000 ${heroVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '900ms' }}>
+                    <CardHeader className="p-3 sm:p-4">
+                      <CardTitle className="text-lg sm:text-xl md:text-2xl font-bold text-center">{liveStats.supportAvailability}</CardTitle>
+                      <CardDescription className="text-center text-xs sm:text-sm">Support Available</CardDescription>
+                    </CardHeader>
+                  </Card>
+                </div>
             </div>
           </div>
         </section>
@@ -1010,24 +1025,24 @@ function HomePageContent() {
             </Card>
           </div>
           
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            <div className={`text-center p-6 bg-card rounded-lg transition-all duration-1000 ${valuesVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '2000ms' }}>
-              <p className="text-4xl font-bold text-[#A92FFA] mb-2">100%</p>
-              <p className="text-sm text-muted-foreground">Unconditional Acceptance</p>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+              <div className={`text-center p-6 bg-card rounded-lg transition-all duration-1000 ${valuesVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '2000ms' }}>
+                <p className="text-4xl font-bold text-[#A92FFA] mb-2">{liveStats.unconditionalAcceptance}</p>
+                <p className="text-sm text-muted-foreground">Unconditional Acceptance</p>
+              </div>
+              <div className={`text-center p-6 bg-card rounded-lg transition-all duration-1000 ${valuesVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '2200ms' }}>
+                <p className="text-4xl font-bold text-[#F28C28] mb-2">{liveStats.daysOfSupport}</p>
+                <p className="text-sm text-muted-foreground">Days of Support</p>
+              </div>
+              <div className={`text-center p-6 bg-card rounded-lg transition-all duration-1000 ${valuesVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '2400ms' }}>
+                <p className="text-4xl font-bold text-[#A92FFA] mb-2">∞</p>
+                <p className="text-sm text-muted-foreground">Potential in Every Person</p>
+              </div>
+              <div className={`text-center p-6 bg-card rounded-lg transition-all duration-1000 ${valuesVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '2600ms' }}>
+                <p className="text-4xl font-bold text-[#A92FFA] mb-2">{liveStats.communityUnited}</p>
+                <p className="text-sm text-muted-foreground">Community United</p>
+              </div>
             </div>
-            <div className={`text-center p-6 bg-card rounded-lg transition-all duration-1000 ${valuesVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '2200ms' }}>
-              <p className="text-4xl font-bold text-[#F28C28] mb-2">365</p>
-              <p className="text-sm text-muted-foreground">Days of Support</p>
-            </div>
-            <div className={`text-center p-6 bg-card rounded-lg transition-all duration-1000 ${valuesVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '2400ms' }}>
-              <p className="text-4xl font-bold text-[#A92FFA] mb-2">∞</p>
-              <p className="text-sm text-muted-foreground">Potential in Every Person</p>
-            </div>
-            <div className={`text-center p-6 bg-card rounded-lg transition-all duration-1000 ${valuesVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '2600ms' }}>
-              <p className="text-4xl font-bold text-[#A92FFA] mb-2">1</p>
-              <p className="text-sm text-muted-foreground">Community United</p>
-            </div>
-          </div>
         </div>
       </section>
 
@@ -1067,10 +1082,10 @@ function HomePageContent() {
                 <CardTitle className="text-2xl !whitespace-pre-line">The Leadership Development Institute</CardTitle>
                 <CardDescription className="text-base !whitespace-pre-line">Our Commitment-Based Program</CardDescription>
               </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground mb-4 !whitespace-pre-line !whitespace-pre-line">The LDI will be a rigorous 64-week, four-tier program that will transform profound brokenness into authentic, purpose-driven leadership through clinical psychology and systematic theology.
+                <CardContent>
+                  <p className="text-muted-foreground mb-4 !whitespace-pre-line !whitespace-pre-line">The LDI will be a rigorous {liveStats.weekProgram}-week, {liveStats.leadershipTiers}-tier program that will transform profound brokenness into authentic, purpose-driven leadership through clinical psychology and systematic theology.
 
-                </p>
+                  </p>
                 <ul className="space-y-2 mb-6">
                   <li className="flex items-start gap-2">
                     <CircleCheck className="w-5 h-5 text-[#A92FFA] mt-0.5 flex-shrink-0" />
@@ -1162,10 +1177,10 @@ function HomePageContent() {
                     <CircleCheck className="w-5 h-5 text-[#A92FFA] mt-0.5 flex-shrink-0" />
                     <span>Shelter & Housing: Immediate and transitional</span>
                   </li>
-                  <li className="flex items-start gap-2">
-                    <CircleCheck className="w-5 h-5 text-[#A92FFA] mt-0.5 flex-shrink-0" />
-                    <span>Advocacy: Voice for the voiceless</span>
-                  </li>
+                    <li className="flex items-start gap-2">
+                      <CircleCheck className="w-5 h-5 text-[#A92FFA] mt-0.5 flex-shrink-0" />
+                      <span>{liveStats.supportAvailability} prayer support hotline</span>
+                    </li>
                 </ul>
                 <Button className="w-full" variant="outline" asChild>
                   <Link href="/outreach" className="!whitespace-pre-line">Learn About our Outreach
@@ -1339,11 +1354,11 @@ function HomePageContent() {
               </div>
             </div>
 
-            <div className="max-w-7xl mx-auto mb-16">
-              <div className="text-center mb-12">
-                <Badge className="mb-4 bg-[#F28C28] text-white">FOUR PROGRESSIVE TIERS</Badge>
-                <h3 className="text-3xl sm:text-4xl font-bold">Your Journey to Leadership</h3>
-              </div>
+              <div className="max-w-7xl mx-auto mb-16">
+                <div className="text-center mb-12">
+                  <Badge className="mb-4 bg-[#F28C28] text-white uppercase">{liveStats.leadershipTiers} PROGRESSIVE TIERS</Badge>
+                  <h3 className="text-3xl sm:text-4xl font-bold">Your Journey to Leadership</h3>
+                </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
                 <Card className={`border-l-4 border-l-[#F28C28] transition-all duration-1000 ${ldiVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '1400ms' }}>
@@ -2200,17 +2215,18 @@ function HomePageContent() {
             <Card className="border-2 border-[#A92FFA]/30 hover-lift">
               <CardHeader>
                 <div className="flex flex-col md:flex-row items-start gap-6">
-                  <div className="md:w-48 flex-shrink-0 relative rounded-lg overflow-hidden !w-48 !h-48">
-                    <Image
-                      src="https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/20251123_213802-1763959096601.jpg?width=8000&height=8000&resize=contain"
-                      alt="Ministry Founder - Visionary Lead"
-                      fill
-                      sizes="(max-width: 768px) 192px, 192px"
-                      className="object-cover object-center !mx-0 !px-0 !w-full !h-[190px] !max-w-full !text-center"
-                      loading="lazy"
-                      quality={75} />
+                    <div className="md:w-48 flex-shrink-0 relative rounded-lg overflow-hidden !w-48 aspect-[1358/1393]">
+                      <Image
+                        src="https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/20251123_213802-1763959096601.jpg?width=1358&height=1393&resize=cover"
+                        alt="Ministry Founder - Visionary Lead"
+                        fill
+                        sizes="(max-width: 768px) 192px, 192px"
+                        className="object-cover object-center !mx-0 !px-0 !w-full !h-full !max-w-full !text-center"
+                        loading="lazy"
+                        quality={75} />
 
-                  </div>
+                    </div>
+
                   <div className="flex-1">
                     <CardTitle className="text-3xl mb-2 !text-justify !whitespace-pre-line">What If Your Darkest Moment Became Your Greatest Purpose?</CardTitle>
                     <CardDescription className="text-lg !text-justify">The Journey Nobody Expected to Change Everything</CardDescription>
@@ -2363,18 +2379,19 @@ function HomePageContent() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
               {teamMembers.slice(0, 6).map((member, index) =>
             <Card key={member.name} className={`hover-lift h-full bg-card transition-all duration-1000 ${staffVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: `${800 + index * 200}ms` }}>
-                  <CardHeader className="transition-opacity duration-700">
-                    <div className="w-full h-48 rounded-lg overflow-hidden mb-4 relative bg-muted">
-                      <Image
-                    src={member.image}
-                    alt={member.name}
-                    fill
-                    className="object-cover"
-                    style={member.name === "Frontline Director" ? { objectPosition: "center 100%" } : member.name === "Spiritual Formation Director" ? { objectPosition: "center 15%" } : undefined} />
-                    </div>
-                    <CardTitle className="text-center text-xl">{member.name}</CardTitle>
-                    <CardDescription className="text-center">{member.role}</CardDescription>
-                  </CardHeader>
+                    <CardHeader className="transition-opacity duration-700">
+                      <div className="w-full aspect-[1358/1393] rounded-lg overflow-hidden mb-4 relative bg-muted">
+                        <Image
+                      src={member.image}
+                      alt={member.name}
+                      fill
+                      className="object-cover"
+                      style={member.name === "Frontline Director" ? { objectPosition: "center 100%" } : member.name === "Spiritual Formation Director" ? { objectPosition: "center 15%" } : undefined} />
+                      </div>
+                      <CardTitle className="text-center text-xl">{member.name}</CardTitle>
+                      <CardDescription className="text-center">{member.role}</CardDescription>
+                    </CardHeader>
+
                   <CardContent className="text-center transition-opacity duration-700">
                       <p className="text-sm text-muted-foreground mb-3 line-clamp-4 max-h-20 overflow-y-auto text-left px-2 !font-normal">{member.description}</p>
                       <div className="flex flex-wrap gap-2 justify-center">
@@ -2417,13 +2434,13 @@ function HomePageContent() {
                       }}
                       style={{ zIndex: isPulsing || allCardsPulsing ? 100 : 10 + index }}>
 
-                        <Card className={`hover-lift h-full ${
+                          <Card className={`hover-lift h-full ${
                       isPulsing ? 'ring-4 ring-[#A92FFA] shadow-2xl' : ''} ${
 
                       allCardsPulsing ? 'ring-4 ring-[#A92FFA] shadow-[0_0_30px_rgba(169,47,250,0.6),0_0_60px_rgba(242,140,40,0.4)]' : ''}`
                       }>
                           <CardHeader>
-                            <div className="w-full h-48 rounded-lg overflow-hidden mb-4 relative">
+                            <div className="w-full aspect-[1358/1393] rounded-lg overflow-hidden mb-4 relative">
                               <Image
                               src={member.image}
                               alt={member.name}
@@ -2434,6 +2451,7 @@ function HomePageContent() {
                             <CardTitle className="text-center text-xl !text-orange-400 !font-bold !not-italic">{member.name}</CardTitle>
                             <CardDescription className="text-center !text-purple-400 !font-bold !whitespace-pre-line">{member.role}</CardDescription>
                           </CardHeader>
+
                           <CardContent className="text-center">
                             <p className="text-sm text-muted-foreground mb-3 !font-normal">{member.description}</p>
                             <div className="flex flex-wrap gap-2 justify-center">
@@ -2602,91 +2620,91 @@ function HomePageContent() {
             </Card>
           </div>
           
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <Card className={`transition-all duration-1000 ${impactVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '1600ms' }}>
-              <CardHeader>
-                <Award className="w-8 h-8 text-[#A92FFA] mb-2" />
-                <CardTitle className="text-3xl font-bold">94%</CardTitle>
-                <CardDescription className="!whitespace-pre-line">PService and Workshop Completion</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-muted-foreground">
-                  Industry-leading retention through unconditional support and purpose discovery.
-                </p>
-              </CardContent>
-            </Card>
-            <Card className={`transition-all duration-1000 ${impactVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '1800ms' }}>
-              <CardHeader>
-                <Shield className="w-8 h-8 text-[#F28C28] mb-2" />
-                <CardTitle className="text-3xl font-bold">87%</CardTitle>
-                <CardDescription>Long-term Sobriety</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-muted-foreground">
-                  Sustained recovery rates at 12+ months post-program graduation.
-                </p>
-              </CardContent>
-            </Card>
-            <Card className={`transition-all duration-1000 ${impactVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '2000ms' }}>
-              <CardHeader>
-                <TrendingUp className="w-8 h-8 text-[#A92FFA] mb-2" />
-                <CardTitle className="text-3xl font-bold">78%</CardTitle>
-                <CardDescription>Employment Rate</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-muted-foreground">
-                  Graduates securing meaningful employment within 90 days.
-                </p>
-              </CardContent>
-            </Card>
-            <Card className={`transition-all duration-1000 ${impactVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '2200ms' }}>
-              <CardHeader>
-                <Home className="w-8 h-8 text-[#A92FFA] mb-2" />
-                <CardTitle className="text-3xl font-bold">92%</CardTitle>
-                <CardDescription>Stable Housing</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-muted-foreground">
-                  Permanent housing secured and maintained for 6+ months.
-                </p>
-              </CardContent>
-            </Card>
-            <Card className={`transition-all duration-1000 ${impactVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '2400ms' }}>
-              <CardHeader>
-                <Users className="w-8 h-8 text-[#F28C28] mb-2" />
-                <CardTitle className="text-3xl font-bold">{liveStats.activeMentors}</CardTitle>
-                <CardDescription>Active Mentors</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-muted-foreground">
-                  LDI graduates currently mentoring Tier 1 and 2 participants.
-                </p>
-              </CardContent>
-            </Card>
-            <Card className={`transition-all duration-1000 ${impactVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '2600ms' }}>
-              <CardHeader>
-                <Heart className="w-8 h-8 text-[#A92FFA] mb-2" />
-                <CardTitle className="text-3xl font-bold">98%</CardTitle>
-                <CardDescription>Satisfaction Rate</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-muted-foreground">
-                  Participants reporting positive experience and growth.
-                </p>
-              </CardContent>
-            </Card>
-            <Card className={`transition-all duration-1000 ${impactVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '2800ms' }}>
-              <CardHeader>
-                <Target className="w-8 h-8 text-[#A92FFA] mb-2" />
-                <CardTitle className="text-3xl font-bold">15</CardTitle>
-                <CardDescription>Partner Organizations</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-muted-foreground">
-                  Collaborative relationships amplifying community impact.
-                </p>
-              </CardContent>
-            </Card>
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <Card className={`transition-all duration-1000 ${impactVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '1600ms' }}>
+                <CardHeader>
+                  <Award className="w-8 h-8 text-[#A92FFA] mb-2" />
+                  <CardTitle className="text-3xl font-bold">{liveStats.serviceCompletionRate}</CardTitle>
+                  <CardDescription className="!whitespace-pre-line">Service and Workshop Completion</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-muted-foreground">
+                    Industry-leading retention through unconditional support and purpose discovery.
+                  </p>
+                </CardContent>
+              </Card>
+              <Card className={`transition-all duration-1000 ${impactVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '1800ms' }}>
+                <CardHeader>
+                  <Shield className="w-8 h-8 text-[#F28C28] mb-2" />
+                  <CardTitle className="text-3xl font-bold">{liveStats.sobrietyRate}</CardTitle>
+                  <CardDescription>Long-term Sobriety</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-muted-foreground">
+                    Sustained recovery rates at {liveStats.sobrietyFollowupMonths} post-program graduation.
+                  </p>
+                </CardContent>
+              </Card>
+              <Card className={`transition-all duration-1000 ${impactVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '2000ms' }}>
+                <CardHeader>
+                  <TrendingUp className="w-8 h-8 text-[#A92FFA] mb-2" />
+                  <CardTitle className="text-3xl font-bold">{liveStats.employmentRate}</CardTitle>
+                  <CardDescription>Employment Rate</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-muted-foreground">
+                    Graduates securing meaningful employment within {liveStats.employmentTimelineDays} days.
+                  </p>
+                </CardContent>
+              </Card>
+              <Card className={`transition-all duration-1000 ${impactVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '2200ms' }}>
+                <CardHeader>
+                  <Home className="w-8 h-8 text-[#A92FFA] mb-2" />
+                  <CardTitle className="text-3xl font-bold">{liveStats.stableHousingRate}</CardTitle>
+                  <CardDescription>Stable Housing</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-muted-foreground">
+                    Permanent housing secured and maintained for {liveStats.housingRetentionMonths}.
+                  </p>
+                </CardContent>
+              </Card>
+              <Card className={`transition-all duration-1000 ${impactVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '2400ms' }}>
+                <CardHeader>
+                  <Users className="w-8 h-8 text-[#F28C28] mb-2" />
+                  <CardTitle className="text-3xl font-bold">{liveStats.activeMentors}</CardTitle>
+                  <CardDescription>Active Mentors</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-muted-foreground">
+                    LDI graduates currently mentoring Tier 1 and 2 participants.
+                  </p>
+                </CardContent>
+              </Card>
+              <Card className={`transition-all duration-1000 ${impactVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '2600ms' }}>
+                <CardHeader>
+                  <Heart className="w-8 h-8 text-[#A92FFA] mb-2" />
+                  <CardTitle className="text-3xl font-bold">{liveStats.satisfactionRate}</CardTitle>
+                  <CardDescription>Satisfaction Rate</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-muted-foreground">
+                    Participants reporting positive experience and growth.
+                  </p>
+                </CardContent>
+              </Card>
+              <Card className={`transition-all duration-1000 ${impactVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '2800ms' }}>
+                <CardHeader>
+                  <Target className="w-8 h-8 text-[#A92FFA] mb-2" />
+                  <CardTitle className="text-3xl font-bold">{partnerCounts.total}</CardTitle>
+                  <CardDescription>Partner Organizations</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-muted-foreground">
+                    Collaborative relationships amplifying community impact.
+                  </p>
+                </CardContent>
+              </Card>
             <Card className={`transition-all duration-1000 ${impactVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '3000ms' }}>
               <CardHeader>
                 <Sparkles className="w-8 h-8 text-[#F28C28] mb-2" />
@@ -2944,14 +2962,14 @@ function HomePageContent() {
                 <CardTitle className="text-xl">Apply to LDI</CardTitle>
                 <CardDescription>Begin Your Journey</CardDescription>
               </CardHeader>
-              <CardContent>
-                <p className="text-sm text-muted-foreground mb-4">
-                  Ready to commit to transformation? Apply for our intensive 64-week Leadership Development Institute.
-                </p>
-                <Button className="w-full" asChild>
-                  <Link href="/ldi-waitlist">Apply Now</Link>
-                </Button>
-              </CardContent>
+                <CardContent>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Ready to commit to transformation? Apply for our intensive {liveStats.weekProgram}-week Leadership Development Institute.
+                  </p>
+                  <Button className="w-full" asChild>
+                    <Link href="/ldi-waitlist">Apply Now</Link>
+                  </Button>
+                </CardContent>
             </Card>
             
             <Card className={`hover-xl transition-shadow border-2 hover:border-[#F28C28] transition-all duration-1000 ${ctaVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '1000ms' }}>

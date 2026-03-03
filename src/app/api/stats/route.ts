@@ -1,10 +1,27 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/db';
-import { prayers, volunteerApplications, volunteerStats, volunteerTimeEntries, workshops, workshopRegistrations, userRoles, roles, partnerOrganizations } from '@/db/schema';
-import { sql, eq, and, gte } from 'drizzle-orm';
+import { prayers, volunteerApplications, volunteerStats, volunteerTimeEntries, workshops, workshopRegistrations, userRoles, roles, partnerOrganizations, siteSettings } from '@/db/schema';
+import { sql, eq, and, gte, inArray } from 'drizzle-orm';
 
 export async function GET(request: NextRequest) {
   try {
+    // 0. Query site settings for dynamic constants
+    let settings: Record<string, string> = {};
+    try {
+      const dbSettings = await db
+        .select({
+          key: siteSettings.key,
+          value: siteSettings.value,
+        })
+        .from(siteSettings);
+      
+      dbSettings.forEach(s => {
+        settings[s.key] = s.value;
+      });
+    } catch (e) {
+      console.error('Error querying site settings:', e);
+    }
+
     // 1. Query prayers table (Core request)
     let prayersStats: any[] = [];
       try {
@@ -191,6 +208,22 @@ export async function GET(request: NextRequest) {
         justice: justicePartners,
         educational: educationalPartners,
       },
+      // Added dynamic site constants
+      weekProgram: settings.week_program_duration || "64",
+      leadershipTiers: settings.leadership_tiers || "4",
+      supportAvailability: settings.support_availability || "24/7",
+      unconditionalAcceptance: settings.unconditional_acceptance || "100%",
+      daysOfSupport: settings.days_of_support || "365",
+      communityUnited: settings.community_united || "1",
+      serviceCompletionRate: settings.service_completion_rate || "94%",
+      sobrietyRate: settings.sobriety_rate || "87%",
+      employmentRate: settings.employment_rate || "78%",
+      stableHousingRate: settings.stable_housing_rate || "92%",
+      satisfactionRate: settings.satisfaction_rate || "98%",
+      visionaryExperienceYears: settings.visionary_experience_years || "8",
+      sobrietyFollowupMonths: settings.sobriety_followup_months || "12+",
+      employmentTimelineDays: settings.employment_timeline_days || "90",
+      housingRetentionMonths: settings.housing_retention_months || "6+",
     };
 
     return NextResponse.json(stats, { status: 200 });

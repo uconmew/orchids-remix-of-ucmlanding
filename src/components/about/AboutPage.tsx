@@ -61,7 +61,8 @@ const staticStaffByDepartment = {
       expertise: ["Program Multiplication", "Community Partnerships", "Strategic Development"],
       image: "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/Screenshot_20251124_071419_Facebook-1763993696703.jpg?width=8000&height=8000&resize=contain",
       email: "b.joseph@uconministries.org",
-      linkedin: "#"
+      linkedin: "#",
+      phone: "720.6493.4321"
     },
   ],
   ministry: [
@@ -73,7 +74,8 @@ const staticStaffByDepartment = {
       expertise: ["Prayer & Supplication", "Logistics Management", "Operations Excellence"],
       image: "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/Screenshot_20251214_173822_Facebook-1765759125085.jpg?width=8000&height=8000&resize=contain",
       email: "brother.richard@uconministries.org",
-      linkedin: "#"
+      linkedin: "#",
+      phone: "720.935.6825"
     },
       {
         id: 4,
@@ -83,29 +85,30 @@ const staticStaffByDepartment = {
         expertise: ["Subject Matter Expert", "Biblical Integration", "M.Div Theology"],
         image: "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/20251124_065619-1763993309149.jpg?width=8000&height=8000&resize=contain",
         email: "c.adams@uconministries.org",
-        linkedin: "#"
+        linkedin: "https://www.linkedin.com/in/cassie-adams-8490621aa",
+        phone: "720.995.1882"
       },
       {
         id: 12,
-        name: "Amanda Andrews",
+        name: "Sheila Benintendi",
         role: "Clinical Formation Director",
         bio: "Licensed clinical psychologist specializing in addiction recovery and trauma treatment, integrating evidence-based practices with faith-based principles.",
-        expertise: ["Clinical Psychology", "Trauma-Informed Care", "Care"],
+        expertise: ["M.S.W." , "Clinical Psychology", "Trauma-Informed Care", "Care"],
         image: "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/project-uploads/3b399b69-78b1-47ea-a46d-f78b0232d98b/visual-edit-uploads/1740523215286-h139u5335m.png",
-        email: "amanda.andrews@uconministries.org",
-        linkedin: "#"
+        email: "s.benitendi@uconministries.org",
+        linkedin: "https://www.linkedin.com/in/sheila-benintendi"
       },
   ],
   outreach: [
     {
       id: 6,
-      name: "Nicole Hedges",
+      name: "Amanda Faber",
       role: "Outreach Director",
-      bio: "Hey. Yeah. Whatever.. as Outreach Director and convict, I live for the moments when barriers crumble and hearts connect across all the lines that usually divide us—because I believe love is the most powerful force for change, and it's meant to be tangible, hands-on, and radically inclusive. My work isn't just about coordinating events or managing volunteers; it's about building bridges into communities, showing up with open hands and listening hearts, and proving through action that nobody is forgotten, overlooked, or too far gone to matter deeply. I've learned that the best outreach happens when we stop trying to be saviors and start being neighbors—when we share meals, hear stories, sit in pain we can't fix, and celebrate joy we didn't create but get to witness. With experience in community engagement, grassroots mobilization, and the beautiful chaos of meeting people exactly where they are, I lead our team in creating outreach initiatives that don't just serve—they honor, dignify, and empower. My heart breaks and heals a thousand times in this work, and I wouldn't have it any other way, because every connection made, every burden shared, and every moment of genuine human kindness reminds me why we're here: to love people back to life, one person at a time, one convict at a time, one soul that society has written off but God never has.",
+      bio: "as Outreach Director and convict, I live for the moments when barriers crumble and hearts connect across all the lines that usually divide us—because I believe love is the most powerful force for change, and it's meant to be tangible, hands-on, and radically inclusive. My work isn't just about coordinating events or managing volunteers; it's about building bridges into communities, showing up with open hands and listening hearts, and proving through action that nobody is forgotten, overlooked, or too far gone to matter deeply. I've learned that the best outreach happens when we stop trying to be saviors and start being neighbors—when we share meals, hear stories, sit in pain we can't fix, and celebrate joy we didn't create but get to witness. With experience in community engagement, grassroots mobilization, and the beautiful chaos of meeting people exactly where they are, I lead our team in creating outreach initiatives that don't just serve—they honor, dignify, and empower. My heart breaks and heals a thousand times in this work, and I wouldn't have it any other way, because every connection made, every burden shared, and every moment of genuine human kindness reminds me why we're here: to love people back to life, one person at a time, one convict at a time, one soul that society has written off but God never has.",
       expertise: ["Outreach Director", "Community Bridge", "Convict"],
       image: "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/Screenshot_20251124_072456_Gallery-1763994324892.jpg?width=8000&height=8000&resize=contain",
-      email: "n.hedges@uconministries.org",
-      linkedin: "#"
+      email: "faber.amanda@uconministries.org",
+      linkedin: "https://www.linkedin.com/in/amandafaber"
     },
     {
       id: 7,
@@ -124,14 +127,14 @@ const staticStaffByDepartment = {
       bio: "Rob ensures no one is prevented from accessing help due to transportation barriers. He manages our vehicle fleet and coordinates rides to job interviews, medical appointments, and court dates.",
       expertise: ["Transportation Coordination", "Community Resources", "Crisis Logistics"],
       image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop",
-      email: "rtaylor@uconministries.org",
+      email: "r.taylor@uconministries.org",
       linkedin: "#"
     }
   ],
   worship: [
     {
       id: 9,
-      name: "Minister Elijah Washington",
+      name: "Elijah Washington",
       role: "Worship Director",
       bio: "Minister Elijah leads our worship experiences and music ministry. A gifted musician and worship leader, he creates space for authentic encounters with God through music, prayer, and creative expression.",
       expertise: ["Worship Leading", "Music Ministry", "Creative Arts"],
