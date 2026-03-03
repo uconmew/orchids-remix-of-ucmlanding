@@ -72,7 +72,7 @@ const staticStaffByDepartment = {
       role: "Supplication Coordinator",
       bio: "I'm the person who makes sure the beautiful vision of transformation actually happens on the ground—coordinating schedules, managing logistics, and keeping all the moving pieces flowing smoothly so that our team can focus on what matters most: changing lives with love and intention. My work might look like spreadsheets and timelines, but what I'm really doing is creating space for miracles to unfold, ensuring that when someone walks through our doors desperate for hope, everything is in place to welcome them with dignity and purpose. I've learned that excellence in the details isn't about perfection—it's about honor, showing people through our preparedness and care that they matter enough for us to get things right. With a heart for organization and an eye for what needs to happen next, I juggle multiple programs, support our incredible team, and troubleshoot challenges with grace and creativity, always remembering that behind every event, workshop, and initiative are real people with real pain and real dreams. My greatest satisfaction comes in those moments when everything clicks into place—when the chaos becomes clarity, when obstacles turn into opportunities, and when our programs run so smoothly that transformation can happen without distraction. I may work behind the scenes, but I know that every detail I manage, every system I improve, and every problem I solve is another way of saying to those we serve: you are worth our very best.",
       expertise: ["Prayer & Supplication", "Logistics Management", "Operations Excellence"],
-      image: "https://hosting.photobucket.com/5eccb2b3-379c-4012-a891-b92507e7d2a3/541eab32-b235-4db0-bd7d-df11ce6539eb.png",
+      image: "https://i.ibb.co/LDgQ4vpY/RICHARD.webp",
       email: "brother.richard@uconministries.org",
       linkedin: "#",
       phone: "720.935.6825"
@@ -93,8 +93,8 @@ const staticStaffByDepartment = {
         name: "Sheila Benintendi",
         role: "Clinical Formation Director",
         bio: "Licensed clinical psychologist specializing in addiction recovery and trauma treatment, integrating evidence-based practices with faith-based principles.",
-        expertise: ["MSW" , "Clinical Psychology", "Trauma-Informed Care", "Care"],
-        image: "https://hosting.photobucket.com/5eccb2b3-379c-4012-a891-b92507e7d2a3/86208b05-7752-409c-855b-49728741ff8f.jpg",
+        expertise: ["M.S.W." , "Clinical Psychology", "Trauma-Informed Care", "Care"],
+        image: "https://i.ibb.co/SXy8H3Tk/sheila.webp",
         email: "s.benitendi@uconministries.org",
         linkedin: "https://www.linkedin.com/in/sheila-benintendi"
       },
