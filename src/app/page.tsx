@@ -16,6 +16,7 @@ import WordShuffleHero from "@/components/WordShuffleHero";
 import CookieBanner from "@/components/CookieBanner";
 import NewsletterPopupModal from "@/components/NewsletterPopupModal";
 import { ConvictCoverageCinematic } from "@/components/ConvictCoverageCinematic";
+import LandingGate from "@/components/landing/LandingGate";
 import { toast } from "sonner";
 import {
   Heart, Users, Target, Compass, BookOpen, HandHeart,
@@ -164,6 +165,32 @@ function HomePageContent() {
       setIsInitialized(true);
     }
   }, []);
+
+  // ── LANDING GATE ──────────────────────────────────────────────────────────
+  // null = SSR not yet resolved (prevents flash), true = show gate, false = skip
+  const [showLandingGate, setShowLandingGate] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const committed = localStorage.getItem('ucon-committed') === 'true';
+      if (committed) {
+        // Already committed — skip gate AND skip homepage WordShuffle
+        setShowLandingGate(false);
+        setHeroAnimationComplete(true);
+        setShowHeroImage(true);
+      } else {
+        setShowLandingGate(true);
+      }
+    }
+  }, []);
+
+  const handleLandingComplete = () => {
+    // LandingGate already wrote both localStorage keys before calling this.
+    setShowLandingGate(false);
+    setHeroAnimationComplete(true);
+    setShowHeroImage(true);
+  };
+  // ─────────────────────────────────────────────────────────────────────────
 
   const handleReplay = () => {
     setHeroAnimationComplete(false);
@@ -567,138 +594,146 @@ function HomePageContent() {
   // Main render
   return (
     <div className={`min-h-screen w-full bg-background relative ${!heroAnimationComplete ? "overflow-hidden max-h-screen" : ""}`}>
+      {/* Landing Gate — fullscreen z-[200], first visit only */}
+      {showLandingGate === true && (
+        <LandingGate onComplete={handleLandingComplete} />
+      )}
+
       {!heroAnimationComplete && (
         <div className="fixed inset-0 z-[100] pointer-events-none" />
       )}
       
       <Navigation />
       
-      <section
-        ref={heroRef}
-        className="relative min-h-[90vh] flex items-center justify-center px-4 sm:px-6 lg:px-8 overflow-hidden w-full"
-        >
-
-        {/* Hero Background Image - CINEMATIC FADE IN */}
-        <div className={`absolute inset-0 z-0 transition-opacity duration-[3000ms] ease-in-out ${
-        showHeroImage && heroVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'}`
-        }>
-          <Image
-            src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=2070&auto=format&fit=crop"
-            alt="Cinematic atmosphere of hope and transformation"
-            fill
-            sizes="100vw"
-            className="object-cover brightness-[0.3]"
-            quality={90}
-            priority />
-          <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-transparent to-background/90" />
-        </div>
-        
-        <div className="w-full relative z-10 py-12 sm:py-16 md:py-20 px-4 lg:px-8">
-          {!heroAnimationComplete && (
-            <motion.div
-              className="transition-all duration-1000"
-              initial={{ opacity: 1 }}
-              animate={{
-                opacity: fadeOutFinal ? 0 : 1,
-                scale: 1
-              }}
-              transition={{
-                opacity: { duration: 3, ease: "easeInOut" }
-              }}
-            >
-              <WordShuffleHero key={replayKey} />
-            </motion.div>
-          )}
-          
-          {/* CTA Buttons and Replay Button */}
-          <div className={`flex flex-col items-center gap-6 transition-all duration-1000 delay-[300ms] ${
-          heroAnimationComplete ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8 pointer-events-none'}`
-          }>
-            <div className="flex flex-wrap gap-4 justify-center items-center">
-              <Button size="lg" className="text-sm sm:text-base md:text-lg px-6 sm:px-8 md:px-10 bg-[#F28C28] hover:bg-[#F28C28]/90 text-white font-bold h-14" asChild>
-                <Link href="/contact">
-                  Start Your Journey
-                  <ArrowRight className="ml-2 w-5 h-5" />
-                </Link>
-              </Button>
-              <Button size="lg" variant="outline" className="text-sm sm:text-base md:text-lg px-6 sm:px-8 md:px-10 border-[#A92FFA] hover:bg-[#A92FFA] hover:text-white font-bold h-14" asChild>
-                <Link href="/ldi">
-                  The LDI Program
-                </Link>
-              </Button>
-              
-              <Button 
-                size="icon" 
-                variant="ghost" 
-                onClick={handleReplay} 
-                className="text-muted-foreground hover:text-[#A92FFA] hover:bg-[#A92FFA]/10 transition-all rounded-full h-14 w-14"
-              >
-                <RotateCcw className="w-7 h-7" />
-              </Button>
-            </div>
-          </div>
-
-      {/* YCON LOGO TRANSITION - Fits full between Hero and Mission */}
-      <motion.div 
-        className="w-full relative z-20 py-8 flex justify-center items-center overflow-hidden"
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ 
-          opacity: heroAnimationComplete ? 1 : 0,
-          scale: heroAnimationComplete ? 1 : 0.95
-        }}
-        transition={{ duration: 3.5, delay: 0.5, ease: "easeOut" }}
-      >
-        <div className="w-full px-0 sm:px-0 lg:px-0">
-          <div 
-            className="relative w-full h-[250px] sm:h-[400px] md:h-[550px] lg:h-[700px] cursor-pointer group"
-            onClick={handleReplay}
+        <section
+          ref={heroRef}
+          className="relative min-h-[90vh] flex items-center justify-center overflow-hidden w-full"
           >
+
+          {/* Hero Background Image - CINEMATIC FADE IN */}
+          <div className={`absolute inset-0 z-0 transition-opacity duration-[3000ms] ease-in-out ${
+          showHeroImage && heroVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'}`
+          }>
             <Image
-              src="https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/1000021808-1761356032294.png"
-              alt="Ucon Ministries Logo"
+              src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=2070&auto=format&fit=crop"
+              alt="Cinematic atmosphere of hope and transformation"
               fill
-              className="object-contain drop-shadow-[0_0_100px_rgba(169,47,250,0.5)] transition-all duration-1000 group-hover:scale-[1.02]"
+              sizes="100vw"
+              className="object-cover brightness-[0.3]"
+              quality={90}
               priority />
-            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-              <div className="bg-background/40 backdrop-blur-lg p-8 rounded-full border border-white/20 shadow-2xl">
-                <RotateCcw className="w-12 h-12 text-white animate-spin-slow" />
+            <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-transparent to-background/90" />
+          </div>
+          
+          <div className="w-full h-full relative z-10">
+            {!heroAnimationComplete && (
+              <motion.div
+                className="w-full h-full flex items-center justify-center transition-all duration-1000"
+                initial={{ opacity: 1 }}
+                animate={{
+                  opacity: fadeOutFinal ? 0 : 1,
+                  scale: 1
+                }}
+                transition={{
+                  opacity: { duration: 3, ease: "easeInOut" }
+                }}
+              >
+                <WordShuffleHero key={replayKey} />
+              </motion.div>
+            )}
+            
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-20 flex flex-col items-center">
+              {/* CTA Buttons and Replay Button */}
+              <div className={`flex flex-col items-center gap-6 transition-all duration-1000 delay-[300ms] ${
+              heroAnimationComplete ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8 pointer-events-none'}`
+              }>
+                <div className="flex flex-wrap gap-4 justify-center items-center">
+                  <Button size="lg" className="text-sm sm:text-base md:text-lg px-6 sm:px-8 md:px-10 bg-[#F28C28] hover:bg-[#F28C28]/90 text-white font-bold h-14" asChild>
+                    <Link href="/contact">
+                      Start Your Journey
+                      <ArrowRight className="ml-2 w-5 h-5" />
+                    </Link>
+                  </Button>
+                  <Button size="lg" variant="outline" className="text-sm sm:text-base md:text-lg px-6 sm:px-8 md:px-10 border-[#A92FFA] hover:bg-[#A92FFA] hover:text-white font-bold h-14" asChild>
+                    <Link href="/ldi">
+                      The LDI Program
+                    </Link>
+                  </Button>
+                  
+                  <Button 
+                    size="icon" 
+                    variant="ghost" 
+                    onClick={handleReplay} 
+                    className="text-muted-foreground hover:text-[#A92FFA] hover:bg-[#A92FFA]/10 transition-all rounded-full h-14 w-14"
+                  >
+                    <RotateCcw className="w-7 h-7" />
+                  </Button>
+                </div>
+              </div>
+
+              {/* YCON LOGO TRANSITION - Fits full between Hero and Mission */}
+              <motion.div 
+                className="w-full relative z-20 py-8 flex justify-center items-center overflow-hidden"
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ 
+                  opacity: heroAnimationComplete ? 1 : 0,
+                  scale: heroAnimationComplete ? 1 : 0.95
+                }}
+                transition={{ duration: 3.5, delay: 0.5, ease: "easeOut" }}
+              >
+                <div className="w-full px-0 sm:px-0 lg:px-0">
+                  <div 
+                    className="relative w-full h-[250px] sm:h-[400px] md:h-[550px] lg:h-[700px] cursor-pointer group"
+                    onClick={handleReplay}
+                  >
+                    <Image
+                      src="https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/1000021808-1761356032294.png"
+                      alt="Ucon Ministries Logo"
+                      fill
+                      className="object-contain drop-shadow-[0_0_100px_rgba(169,47,250,0.5)] transition-all duration-1000 group-hover:scale-[1.02]"
+                      priority />
+                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                      <div className="bg-background/40 backdrop-blur-lg p-8 rounded-full border border-white/20 shadow-2xl">
+                        <RotateCcw className="w-12 h-12 text-white animate-spin-slow" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+                
+              {/* Hero Stats Grid */}
+              <div className={`mt-12 sm:mt-16 grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 w-full transition-all duration-1000 delay-[500ms] ${
+              heroAnimationComplete ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8 pointer-events-none'}`
+              }>
+                <Card className={`bg-[#A92FFA] text-white hover-lift transition-all duration-1000 ${heroVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '600ms' }}>
+                  <CardHeader className="p-3 sm:p-4">
+                    <CardTitle className="text-lg sm:text-xl md:text-2xl font-bold text-center text-white !whitespace-pre-line">Projection </CardTitle>
+                    <CardDescription className="text-white/80 text-center text-xs sm:text-sm">Lives Transformed</CardDescription>
+                  </CardHeader>
+                </Card>
+                <Card className={`bg-[#F28C28] text-white hover-lift transition-all duration-1000 ${heroVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '700ms' }}>
+                  <CardHeader className="p-3 sm:p-4">
+                    <CardTitle className="text-lg sm:text-xl md:text-2xl font-bold text-center text-white">64</CardTitle>
+                    <CardDescription className="text-white/80 text-center text-xs sm:text-sm">Week Program</CardDescription>
+                  </CardHeader>
+                </Card>
+                <Card className={`bg-gradient-to-br from-[#A92FFA] to-[#F28C28] text-white hover-lift transition-all duration-1000 ${heroVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '800ms' }}>
+                  <CardHeader className="p-3 sm:p-4">
+                    <CardTitle className="text-lg sm:text-xl md:text-2xl font-bold text-center text-white">4</CardTitle>
+                    <CardDescription className="text-white/80 text-center text-xs sm:text-sm">Leadership Tiers</CardDescription>
+                  </CardHeader>
+                </Card>
+                <Card className={`hover-lift transition-all duration-1000 ${heroVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '900ms' }}>
+                  <CardHeader className="p-3 sm:p-4">
+                    <CardTitle className="text-lg sm:text-xl md:text-2xl font-bold text-center">24/7</CardTitle>
+                    <CardDescription className="text-center text-xs sm:text-sm">Support Available</CardDescription>
+                  </CardHeader>
+                </Card>
               </div>
             </div>
           </div>
-        </div>
-      </motion.div>
-          
-          {/* Hero Stats Grid */}
-          <div className={`mt-12 sm:mt-16 grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mx-auto max-w-7xl transition-all duration-1000 delay-[500ms] ${
-          heroAnimationComplete ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8 pointer-events-none'}`
-          }>
-            <Card className={`bg-[#A92FFA] text-white hover-lift transition-all duration-1000 ${heroVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '600ms' }}>
-              <CardHeader className="p-3 sm:p-4">
-                <CardTitle className="text-lg sm:text-xl md:text-2xl font-bold text-center text-white !whitespace-pre-line">Projection </CardTitle>
-                <CardDescription className="text-white/80 text-center text-xs sm:text-sm">Lives Transformed</CardDescription>
-              </CardHeader>
-            </Card>
-            <Card className={`bg-[#F28C28] text-white hover-lift transition-all duration-1000 ${heroVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '700ms' }}>
-              <CardHeader className="p-3 sm:p-4">
-                <CardTitle className="text-lg sm:text-xl md:text-2xl font-bold text-center text-white">64</CardTitle>
-                <CardDescription className="text-white/80 text-center text-xs sm:text-sm">Week Program</CardDescription>
-              </CardHeader>
-            </Card>
-            <Card className={`bg-gradient-to-br from-[#A92FFA] to-[#F28C28] text-white hover-lift transition-all duration-1000 ${heroVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '800ms' }}>
-              <CardHeader className="p-3 sm:p-4">
-                <CardTitle className="text-lg sm:text-xl md:text-2xl font-bold text-center text-white">4</CardTitle>
-                <CardDescription className="text-white/80 text-center text-xs sm:text-sm">Leadership Tiers</CardDescription>
-              </CardHeader>
-            </Card>
-            <Card className={`hover-lift transition-all duration-1000 ${heroVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '900ms' }}>
-              <CardHeader className="p-3 sm:p-4">
-                <CardTitle className="text-lg sm:text-xl md:text-2xl font-bold text-center">24/7</CardTitle>
-                <CardDescription className="text-center text-xs sm:text-sm">Support Available</CardDescription>
-              </CardHeader>
-            </Card>
-          </div>
-        </div>
-      </section>
+        </section>
+
 
       <div className={`transition-opacity duration-1000 ${
         heroAnimationComplete ? 'opacity-100' : 'opacity-0 pointer-events-none'

@@ -10,6 +10,7 @@
     "seed:partners": "tsx src/db/seeds/init-partners.ts"
   },
   "dependencies": {
+    "@heyputer/puter.js": "^2.2.10",
     "@hookform/resolvers": "^5.2.2",
     "@libsql/client": "^0.15.15",
     "@radix-ui/react-accordion": "^1.2.12",
