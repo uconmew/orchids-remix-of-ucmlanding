@@ -42,7 +42,13 @@ export default function NotificationCenter() {
 
   const fetchNotifications = async () => {
     try {
-      const response = await fetch("/api/notifications");
+      const token = typeof localStorage !== 'undefined'
+        ? (localStorage.getItem('bearer_token') || localStorage.getItem('ucon-auth-token'))
+        : null;
+      const response = await fetch("/api/notifications", {
+        credentials: 'include',
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      });
       if (response.ok) {
         const data = await response.json();
         setNotifications(data);

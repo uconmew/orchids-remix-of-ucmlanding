@@ -46,7 +46,13 @@ export default function AlertCenter({ className }: AlertCenterProps) {
     if (!session?.user) return;
     
     try {
-      const response = await fetch('/api/alerts?includeRead=true');
+      const token = typeof localStorage !== 'undefined'
+        ? (localStorage.getItem('bearer_token') || localStorage.getItem('ucon-auth-token'))
+        : null;
+      const response = await fetch('/api/alerts?includeRead=true', {
+        credentials: 'include',
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      });
       if (response.ok) {
         const data = await response.json();
         setAlerts(data.alerts || []);

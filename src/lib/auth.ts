@@ -84,8 +84,35 @@ export const auth = betterAuth({
 // Session validation helper
 // Note: request parameter is kept for backward compatibility but is no longer used
 // better-auth requires headers from next/headers, not from NextRequest
-export async function getCurrentUser(_request?: NextRequest) {
-  const h = await headers();
-  const session = await auth.api.getSession({ headers: h });
-  return session?.user || null;
+export async function getCurrentUser(request?: NextRequest) {
+  // Try better-auth session cookie first (works for same-origin / SSR)
+  try {
+    const h = await headers();
+    const session = await auth.api.getSession({ headers: h });
+    if (session?.user) return session.user;
+  } catch {}
+
+  // Fall back to bearer token from Authorization header
+  // (needed in cross-origin / iframe environments where cookies are blocked)
+  const authHeader = request?.headers.get('authorization') || '';
+  const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : null;
+
+  if (token) {
+    try {
+      // Look up the session by token in the better-auth sessions table
+      const sessionRecord = await db.query.session?.findFirst({
+        where: (s: any, { eq }: any) => eq(s.token, token),
+      });
+      if (sessionRecord && new Date(sessionRecord.expiresAt) > new Date()) {
+        const userRecord = await db.query.user?.findFirst({
+          where: (u: any, { eq }: any) => eq(u.id, sessionRecord.userId),
+        });
+        if (userRecord) return userRecord;
+      }
+    } catch (tokenError) {
+      console.error('Bearer token lookup failed:', tokenError);
+    }
+  }
+
+  return null;
 }
