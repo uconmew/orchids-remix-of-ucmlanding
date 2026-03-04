@@ -24,7 +24,7 @@ export const defaultTeamMembers: TeamMember[] = [
       {
         name: "Clinical Formation Director",
         role: "Mental Health & Clinical Excellence",
-        image: "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/320x400-1-1766235599644.jpeg?width=1358&height=1393&resize=cover",
+        image: "https://i.ibb.co/PzPd8K3Y/Screenshot-20260304-084924-Gallery.jpghttps://i.ibb.co/PzPd8K3Y/Screenshot-20260304-084924-Gallery.jpgw?idth=1358&height=1393&resize=cover",
         description: "Licensed clinical psychologist specializing in addiction recovery and trauma treatment, integrating evidence-based practices with faith-based principles.",
         badges: ["Clinical Psychology", "Trauma-Informed Care", "SME"]
       },

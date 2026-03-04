@@ -72,7 +72,7 @@ const staticStaffByDepartment = {
       role: "Supplication Coordinator",
       bio: "I'm the person who makes sure the beautiful vision of transformation actually happens on the ground—coordinating schedules, managing logistics, and keeping all the moving pieces flowing smoothly so that our team can focus on what matters most: changing lives with love and intention. My work might look like spreadsheets and timelines, but what I'm really doing is creating space for miracles to unfold, ensuring that when someone walks through our doors desperate for hope, everything is in place to welcome them with dignity and purpose. I've learned that excellence in the details isn't about perfection—it's about honor, showing people through our preparedness and care that they matter enough for us to get things right. With a heart for organization and an eye for what needs to happen next, I juggle multiple programs, support our incredible team, and troubleshoot challenges with grace and creativity, always remembering that behind every event, workshop, and initiative are real people with real pain and real dreams. My greatest satisfaction comes in those moments when everything clicks into place—when the chaos becomes clarity, when obstacles turn into opportunities, and when our programs run so smoothly that transformation can happen without distraction. I may work behind the scenes, but I know that every detail I manage, every system I improve, and every problem I solve is another way of saying to those we serve: you are worth our very best.",
       expertise: ["Prayer & Supplication", "Logistics Management", "Operations Excellence"],
-      image: "https://i.ibb.co/LDgQ4vpY/RICHARD.webp",
+      image: "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/Screenshot_20251214_173822_Facebook-1765759125085.jpg?width=8000&height=8000&resize=contain",
       email: "brother.richard@uconministries.org",
       linkedin: "#",
       phone: "720.935.6825"
@@ -94,7 +94,7 @@ const staticStaffByDepartment = {
         role: "Clinical Formation Director",
         bio: "Licensed clinical psychologist specializing in addiction recovery and trauma treatment, integrating evidence-based practices with faith-based principles.",
         expertise: ["M.S.W." , "Clinical Psychology", "Trauma-Informed Care", "Care"],
-        image: "https://i.ibb.co/SXy8H3Tk/sheila.webp",
+        image: "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/project-uploads/3b399b69-78b1-47ea-a46d-f78b0232d98b/visual-edit-uploads/1740523215286-h139u5335m.png",
         email: "s.benitendi@uconministries.org",
         linkedin: "https://www.linkedin.com/in/sheila-benintendi"
       },
