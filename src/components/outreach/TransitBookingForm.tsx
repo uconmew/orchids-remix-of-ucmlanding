@@ -204,6 +204,7 @@ export default function TransitBookingForm({ onSuccess, onCancel }: TransitBooki
 
       const response = await fetch('/api/outreach/transit/book', {
         method: 'POST',
+        credentials: 'include',
         headers: { 
           'Content-Type': 'application/json',
           ...(token ? { 'Authorization': `Bearer ${token}` } : {})
@@ -547,7 +548,6 @@ export default function TransitBookingForm({ onSuccess, onCancel }: TransitBooki
               <Input
                 id="requestedDate"
                 type="date"
-                min={getMinDate()}
                 value={formData.requestedDate}
                 onChange={(e) => handleInputChange('requestedDate', e.target.value)}
                 required
