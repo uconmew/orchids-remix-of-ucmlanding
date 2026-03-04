@@ -181,6 +181,20 @@ export default function ConvictPortalPage() {
       toast.error("An error occurred while updating the booking");
     } finally {
       setIsSubmittingEdit(false);
+      // Refresh bookings so user sees updated status immediately
+      try {
+        const token = localStorage.getItem("bearer_token") || localStorage.getItem("ucon-auth-token");
+        const res = await fetch("/api/outreach/transit/book", {
+          credentials: "include",
+          headers: token ? { Authorization: `Bearer ${token}` } : {},
+        });
+        if (res.ok) {
+          const updated = await res.json();
+          setTransitBookings(updated);
+        }
+      } catch (e) {
+        console.error("Failed to refresh bookings:", e);
+      }
     }
   };
 

@@ -463,6 +463,13 @@ export async function PATCH(request: NextRequest) {
       return NextResponse.json({ error: 'Can only edit pending, approved, or more_info_needed bookings' }, { status: 400 });
     }
 
+    // When user responds to a more_info_needed request, flip back to pending
+    // so staff knows there is a new response to review
+    if (existing[0].status === 'more_info_needed' && userNotes) {
+      updateFields.status = 'pending';
+      updateFields.staffRequirements = null; // clear the requirement — it's been addressed
+    }
+
     // If changing time, re-enforce 24-hour rule
     if (requestedTime && existing[0].status === 'pending') {
       const requestedDate = new Date(requestedTime);
