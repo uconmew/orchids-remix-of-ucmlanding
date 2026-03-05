@@ -229,10 +229,13 @@ export async function PATCH(request: NextRequest) {
               createdAt: new Date().toISOString(),
             });
 
-            // Hide booking from user's active list
-            await db.update(transitBookings)
-              .set({ isHiddenFromUser: true, updatedAt: new Date().toISOString() })
-              .where(eq(transitBookings.id, id));
+            // Hide booking from user's active list - except for denied bookings
+            // which remain visible until the user manually dismisses them
+            if (status !== 'denied') {
+              await db.update(transitBookings)
+                .set({ isHiddenFromUser: true, updatedAt: new Date().toISOString() })
+                .where(eq(transitBookings.id, id));
+            }
           } catch (activityError) {
             console.error('Error moving booking to activity log:', activityError);
           }

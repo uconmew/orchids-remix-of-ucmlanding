@@ -53,6 +53,27 @@ export default function ConvictPortalPage() {
   const [isLoadingStats, setIsLoadingStats] = useState(true);
   const [activities, setActivities] = useState<any[]>([]);
   const [isLoadingActivities, setIsLoadingActivities] = useState(true);
+  const [portalStatus, setPortalStatus] = useState<any>(null);
+  const [isLoadingStatus, setIsLoadingStatus] = useState(true);
+
+  const fetchPortalStatus = async () => {
+    try {
+      const response = await fetch('/api/convict-portal/status');
+      if (response.ok) {
+        const data = await response.json();
+        setPortalStatus(data);
+      }
+    } catch (error) {
+      console.error('Error fetching portal status:', error);
+    } finally {
+      setIsLoadingStatus(false);
+    }
+  };
+
+  const hasLossOrSuspension = useMemo(() => {
+    if (!portalStatus) return false;
+    return portalStatus.transit.status === 'loss' || portalStatus.transit.status === 'suspended';
+  }, [portalStatus]);
 
   const fetchActivities = async () => {
     if (!session) return;
@@ -129,6 +150,7 @@ export default function ConvictPortalPage() {
       fetchBookings();
       fetchStats();
       fetchActivities();
+      fetchPortalStatus();
     }
   }, [session]);
 
@@ -154,6 +176,22 @@ export default function ConvictPortalPage() {
       success: (data) => data,
       error: (err) => err.message,
     });
+  };
+
+  const handleDismissBooking = async (id: number) => {
+    try {
+      const response = await fetch('/api/outreach/transit/book', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, isHiddenFromUser: true }),
+      });
+      if (response.ok) {
+        toast.success("Notification dismissed");
+        fetchBookings();
+      }
+    } catch (error) {
+      toast.error("Failed to dismiss notification");
+    }
   };
 
   const handleUpdateBooking = async (e: React.FormEvent) => {
@@ -218,10 +256,12 @@ export default function ConvictPortalPage() {
             <h1 className="text-4xl font-bold mb-2">Welcome Back, {session.user.name}</h1>
             <p className="text-muted-foreground">Your personal transformation journey dashboard</p>
           </div>
-          <Badge className="bg-gradient-to-r from-[#A92FFA] to-[#F28C28] px-4 py-1 text-sm font-bold">
-            Active Convict Member
-          </Badge>
+            <Badge className="bg-gradient-to-r from-[#A92FFA] to-[#F28C28] px-4 py-1 text-sm font-bold">
+              Active Convict Member
+            </Badge>
           </div>
+
+          <PortalStatusPanel status={portalStatus} isLoading={isLoadingStatus} />
 
           {/* APPROVED RIDE HUD - Shows approved/in_progress rides prominently */}
           {transitBookings
@@ -509,13 +549,13 @@ export default function ConvictPortalPage() {
                     </div>
                   ) : transitBookings.filter(b => {
                     const status = (b.status || '').toLowerCase().replace(/_/g, ' ').trim();
-                    return ['approved', 'pending', 'more info needed', 'need more information', 'in_progress', 'in progress', 'deferral'].includes(status);
+                    return ['approved', 'pending', 'more info needed', 'need more information', 'in_progress', 'in progress', 'deferral', 'denied'].includes(status);
                   }).length > 0 ? (
                     <div className="space-y-4">
                       {transitBookings
                         .filter(b => {
                           const status = (b.status || '').toLowerCase().replace(/_/g, ' ').trim();
-                          return ['approved', 'pending', 'more info needed', 'need more information', 'in_progress', 'in progress', 'deferral'].includes(status);
+                          return ['approved', 'pending', 'more info needed', 'need more information', 'in_progress', 'in progress', 'deferral', 'denied'].includes(status);
                         })
                         .map((booking) => (
                         <div key={booking.id} className="p-4 bg-muted/50 rounded-lg border border-border space-y-3">
@@ -567,6 +607,16 @@ export default function ConvictPortalPage() {
                                       Cancel
                                     </Button>
                                   </div>
+                                )}
+                                {(booking.status || '').toLowerCase() === 'denied' && (
+                                  <Button 
+                                    variant="outline" 
+                                    size="sm" 
+                                    className="h-7 text-[10px]"
+                                    onClick={() => handleDismissBooking(booking.id)}
+                                  >
+                                    Dismiss
+                                  </Button>
                                 )}
                               </div>
                             </div>
@@ -790,6 +840,74 @@ export default function ConvictPortalPage() {
 
       <Footer />
     </div>
+  );
+}
+
+function PortalStatusPanel({ status, isLoading }: { status: any, isLoading: boolean }) {
+  if (isLoading) {
+    return (
+      <Card className="mb-6 animate-pulse">
+        <CardContent className="h-24 flex items-center justify-center">
+          <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
+        </CardContent>
+      </Card>
+    );
+  }
+  
+  if (!status) return null;
+
+  const { transit, volunteer, programs } = status;
+
+  return (
+    <Card className={`mb-6 border-l-4 ${
+      transit.status === 'active' ? 'border-l-green-500' : 
+      transit.status === 'suspended' ? 'border-l-yellow-500' : 'border-l-red-500'
+    } bg-muted/20`}>
+      <CardHeader className="pb-2">
+        <CardTitle className="text-lg flex items-center gap-2">
+          <Shield className="w-5 h-5 text-[#A92FFA]" />
+          Access & Privileges
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="space-y-1">
+            <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Transit Access</p>
+            <div className="flex items-center gap-2">
+              <Badge variant={transit.status === 'active' ? 'default' : 'destructive'} className={transit.status === 'active' ? 'bg-green-500' : ''}>
+                {transit.status.toUpperCase()}
+              </Badge>
+              {transit.status === 'suspended' && (
+                <span className="text-[10px] text-muted-foreground">
+                  Until {new Date(transit.expiresAt).toLocaleDateString()}
+                </span>
+              )}
+            </div>
+            {transit.reason && <p className="text-[10px] text-destructive mt-1 italic leading-tight">{transit.reason}</p>}
+          </div>
+          
+          <div className="space-y-1">
+            <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Volunteer Status</p>
+            <div className="flex items-center gap-2">
+              <Badge variant={volunteer.status === 'active' ? 'default' : 'secondary'} className={volunteer.status === 'active' ? 'bg-[#F28C28]' : ''}>
+                {volunteer.status.toUpperCase()}
+              </Badge>
+            </div>
+          </div>
+
+          <div className="space-y-1">
+            <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Active Programs</p>
+            <div className="flex flex-wrap gap-1">
+              {programs && programs.length > 0 ? programs.map((p: string) => (
+                <Badge key={p} variant="outline" className="text-[9px] h-5 bg-[#A92FFA]/5 text-[#A92FFA] border-[#A92FFA]/20">
+                  {p.toUpperCase()}
+                </Badge>
+              )) : <span className="text-[10px] text-muted-foreground italic">No active programs</span>}
+            </div>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
   );
 }
 

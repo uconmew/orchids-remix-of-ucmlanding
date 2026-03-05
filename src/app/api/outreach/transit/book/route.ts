@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/db';
-import { transitBookings, convicts, notifications, user, overrideCodes, transitConstraints } from '@/db/schema';
+import { transitBookings, convicts, notifications, user, overrideCodes, transitConstraints, transitSuspensions } from '@/db/schema';
 import { getCurrentUser } from '@/lib/auth';
 import { eq, and, desc, or, isNull, sql } from 'drizzle-orm';
 import { createErrorResponse, ERROR_CODES } from '@/lib/error-codes';
@@ -184,7 +184,39 @@ export async function POST(request: NextRequest) {
       }
 
       try {
-      const body = await request.json();
+        // 1. Check for 'loss' history
+        const hasLossHistory = await db.select()
+          .from(transitBookings)
+          .where(and(eq(transitBookings.userId, currentUser.id), eq(transitBookings.status, 'loss')))
+          .limit(1);
+
+        if (hasLossHistory.length > 0) {
+          return NextResponse.json({ 
+            error: 'Transit privileges revoked due to prior loss of privilege status.',
+            code: 'PRIVILEGE_REVOKED'
+          }, { status: 403 });
+        }
+
+        // 2. Check for active suspension (last 30 days)
+        const thirtyDaysAgo = new Date();
+        thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+        const activeSuspension = await db.select()
+          .from(transitSuspensions)
+          .where(and(
+              eq(transitSuspensions.userId, currentUser.id),
+              sql`${transitSuspensions.suspendedAt} > ${thirtyDaysAgo.toISOString()}`
+          ))
+          .limit(1);
+
+        if (activeSuspension.length > 0) {
+          return NextResponse.json({ 
+            error: 'Your transit access is currently suspended. Suspensions last for 30 days.',
+            code: 'ACCESS_SUSPENDED'
+          }, { status: 403 });
+        }
+
+        const body = await request.json();
       const { 
         pickupLocation, 
         destination, 

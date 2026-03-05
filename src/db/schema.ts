@@ -837,9 +837,20 @@ export const transitBookings = pgTable('transit_bookings', {
   assignedDriverId: text('assigned_driver_id').references(() => user.id),
   deniedReason: text('denied_reason'),
   completedAt: text('completed_at'),
+  dismissedAt: timestamp('dismissed_at'),
   staffRequirements: text('staff_requirements'),
   createdAt: text('created_at').notNull(),
   updatedAt: text('updated_at').notNull(),
+});
+
+export const transitSuspensions = pgTable('transit_suspensions', {
+  id: serial('id').primaryKey(),
+  userId: text('user_id').notNull().references(() => user.id, { onDelete: 'cascade' }),
+  suspendedAt: timestamp('suspended_at').notNull().defaultNow(),
+  suspendedBy: text('suspended_by').references(() => user.id),
+  reason: text('reason'),
+  expiresAt: timestamp('expires_at'), // Set to 30 days from suspendedAt
+  createdAt: timestamp('created_at').notNull().defaultNow(),
 });
 
 export const outreachRegistrations = pgTable('outreach_registrations', {

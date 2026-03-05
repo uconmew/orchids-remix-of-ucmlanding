@@ -55,6 +55,27 @@ export default function TransitBookingForm({ onSuccess, onCancel }: TransitBooki
   const [destVerification, setDestVerification] = useState<AddressVerification | null>(null);
   const [isVerifyingPickup, setIsVerifyingPickup] = useState(false);
   const [isVerifyingDest, setIsVerifyingDest] = useState(false);
+  const [portalStatus, setPortalStatus] = useState<any>(null);
+  const [isLoadingStatus, setIsLoadingStatus] = useState(true);
+
+  useEffect(() => {
+    const fetchStatus = async () => {
+      try {
+        const response = await fetch('/api/convict-portal/status');
+        if (response.ok) {
+          const data = await response.json();
+          setPortalStatus(data);
+        }
+      } catch (error) {
+        console.error('Error fetching portal status:', error);
+      } finally {
+        setIsLoadingStatus(false);
+      }
+    };
+    fetchStatus();
+  }, []);
+
+  const isAccessBlocked = portalStatus?.transit.status === 'loss' || portalStatus?.transit.status === 'suspended';
 
   const [formData, setFormData] = useState({
     riderName: '',
@@ -264,6 +285,58 @@ export default function TransitBookingForm({ onSuccess, onCancel }: TransitBooki
     tomorrow.setDate(tomorrow.getDate() + 1);
     return tomorrow.toISOString().split('T')[0];
   };
+
+  if (isLoadingStatus) {
+    return (
+      <Card className="flex items-center justify-center p-12">
+        <Loader2 className="w-8 h-8 animate-spin text-[#A92FFA]" />
+      </Card>
+    );
+  }
+
+  if (isAccessBlocked) {
+    return (
+      <Card className="border-2 border-destructive bg-destructive/5 overflow-hidden">
+        <div className="bg-destructive p-4 flex items-center gap-3">
+          <Shield className="w-8 h-8 text-white" />
+          <div>
+            <h3 className="text-xl font-bold text-white">Transit Access Locked</h3>
+            <p className="text-white/80 text-sm">Your transportation privileges have been limited.</p>
+          </div>
+        </div>
+        <CardContent className="pt-6 space-y-4">
+          <Alert variant="destructive">
+            <AlertCircle className="w-4 h-4" />
+            <AlertDescription className="font-semibold">
+              Status: {portalStatus.transit.status.toUpperCase()}
+            </AlertDescription>
+          </Alert>
+          
+          <div className="p-4 bg-background border rounded-lg space-y-2">
+            <p className="text-sm font-medium">Reason for Restriction:</p>
+            <p className="text-sm text-muted-foreground italic">"{portalStatus.transit.reason}"</p>
+            {portalStatus.transit.expiresAt && (
+              <p className="text-xs text-muted-foreground mt-4">
+                Restriction expires on: <strong>{new Date(portalStatus.transit.expiresAt).toLocaleDateString()}</strong>
+              </p>
+            )}
+          </div>
+
+          <div className="space-y-2">
+            <p className="text-sm text-muted-foreground">
+              If you believe this is an error or need to discuss your eligibility, please contact our administrative office.
+            </p>
+            <Button className="w-full bg-[#A92FFA] hover:bg-[#A92FFA]/90" asChild>
+              <a href="tel:7206639243">
+                <Phone className="w-4 h-4 mr-2" />
+                Contact Administrator
+              </a>
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
 
   if (submitStatus === 'success') {
     return (
