@@ -12,6 +12,7 @@ import { toast } from "sonner";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Loader2, UserPlus } from "lucide-react";
+import { PasswordInput } from "@/components/PasswordInput";
 
 type ErrorTypes = Partial<Record<string, string>>;
 
@@ -132,38 +133,36 @@ export default function RegisterPage() {
                   />
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="password">Password</Label>
-                  <Input
-                    id="password"
-                    type="password"
-                    placeholder="Create a strong password"
-                    value={formData.password}
-                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                    required
-                    disabled={isLoading}
-                    autoComplete="off"
-                  />
-                  <p className="text-xs text-muted-foreground">
-                    Must be at least 8 characters long
-                  </p>
-                </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="password">Password</Label>
+                    <PasswordInput
+                      id="password"
+                      placeholder="Create a strong password"
+                      value={formData.password}
+                      onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                      required
+                      disabled={isLoading}
+                      autoComplete="off"
+                    />
+                    <p className="text-xs text-muted-foreground">
+                      Must be at least 8 characters long
+                    </p>
+                  </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="confirmPassword">Confirm Password</Label>
-                  <Input
-                    id="confirmPassword"
-                    type="password"
-                    placeholder="Re-enter your password"
-                    value={formData.confirmPassword}
-                    onChange={(e) =>
-                      setFormData({ ...formData, confirmPassword: e.target.value })
-                    }
-                    required
-                    disabled={isLoading}
-                    autoComplete="off"
-                  />
-                </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="confirmPassword">Confirm Password</Label>
+                    <PasswordInput
+                      id="confirmPassword"
+                      placeholder="Re-enter your password"
+                      value={formData.confirmPassword}
+                      onChange={(e) =>
+                        setFormData({ ...formData, confirmPassword: e.target.value })
+                      }
+                      required
+                      disabled={isLoading}
+                      autoComplete="off"
+                    />
+                  </div>
 
                 <Button
                   type="submit"
