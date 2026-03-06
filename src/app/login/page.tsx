@@ -14,7 +14,6 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Loader2, LogIn } from "lucide-react";
 import { ERROR_CODES } from "@/lib/error-codes";
-import { PasswordInput } from "@/components/PasswordInput";
 
 function showErrorWithCode(code: string, customMessage?: string) {
   const errorDef = ERROR_CODES[code];
@@ -216,18 +215,19 @@ function LoginForm() {
                 />
               </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="password">Password</Label>
-                  <PasswordInput
-                    id="password"
-                    placeholder="Enter your password"
-                    value={formData.password}
-                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                    required
-                    disabled={isLoading}
-                    autoComplete="off"
-                  />
-                </div>
+              <div className="space-y-2">
+                <Label htmlFor="password">Password</Label>
+                <Input
+                  id="password"
+                  type="password"
+                  placeholder="Enter your password"
+                  value={formData.password}
+                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                  required
+                  disabled={isLoading}
+                  autoComplete="off"
+                />
+              </div>
 
               <div className="flex items-center space-x-2">
                 <Checkbox

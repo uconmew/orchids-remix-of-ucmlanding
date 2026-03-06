@@ -3041,3 +3041,10 @@ export default function HomePage() {
 
 // Rename GraduationCap to avoid conflict if any (though lucide-react should be fine)
 const ProjectGraduationCap = GraduationCap;
+
+// Recovery Banner — auto-injected by setup-recovery-banner.ts
+import RecoveryBanner from "@/components/RecoveryBanner";
+
+// ── RecoveryBanner — place this inside your page return, e.g. before </> ──
+// <RecoveryBanner />
+// ─────────────────────────────────────────────────────────────────────────────

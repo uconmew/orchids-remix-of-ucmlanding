@@ -13,7 +13,6 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { toast } from "sonner";
 import { Loader2, Shield, Lock, UserCheck, AlertTriangle } from "lucide-react";
 import { ERROR_CODES, getUserMessage } from "@/lib/error-codes";
-import { PasswordInput } from "@/components/PasswordInput";
 
 function showErrorWithCode(code: string, customMessage?: string) {
   const errorDef = ERROR_CODES[code];

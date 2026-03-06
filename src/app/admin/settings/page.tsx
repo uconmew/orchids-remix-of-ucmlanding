@@ -105,6 +105,23 @@ export default function AdminSettingsPage() {
             </div>
             <Switch checked={isOn} onCheckedChange={v => update("maintenance_mode", v ? "true" : "false")} />
           </div>
+
+          {/* Recovery Banner sub-toggle */}
+          <div className="flex items-center justify-between p-4 border border-border rounded-lg bg-[#A92FFA]/5">
+            <div>
+              <p className="font-medium flex items-center gap-2">
+                <span className="inline-block w-2 h-2 rounded-full" style={{ background: "#A92FFA" }} />
+                Recovery Banner
+              </p>
+              <p className="text-sm text-muted-foreground mt-0.5">
+                Shows a sticky banner on the homepage telling visitors systems are recovering and transit booking is affected.
+              </p>
+            </div>
+            <Switch
+              checked={settings.recovery_banner_enabled === "true"}
+              onCheckedChange={v => update("recovery_banner_enabled", v ? "true" : "false")}
+            />
+          </div>
           <div className="space-y-2">
             <Label>Reason for Maintenance</Label>
             <Select value={settings.maintenance_reason} onValueChange={v => update("maintenance_reason", v)}>

@@ -18,8 +18,6 @@ import {
 import { toast } from "sonner";
 import { useAuthorization, ACTION_CLEARANCE, CLEARANCE_LEVELS, DUTY_PERMISSIONS } from "@/hooks/useAuthorization";
 import { ERROR_CODES } from "@/lib/error-codes";
-import Navigation from "@/components/Navigation";
-import Footer from "@/components/Footer";
 
 function showErrorWithCode(code: string, reason?: string) {
   const errorDef = ERROR_CODES[code];
@@ -440,177 +438,173 @@ export default function StaffToolsPage() {
     }
 
   return (
-    <div className="min-h-screen bg-background">
-      <Navigation />
-      <div className="p-8 max-w-7xl mx-auto pt-32">
-        {/* Header */}
-        <div className="mb-8">
-          <Button variant="ghost" size="sm" className="mb-4" asChild>
-            <Link href="/staff-login">
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Staff Portal
-            </Link>
-          </Button>
+    <div className="p-8 max-w-7xl mx-auto">
+      {/* Header */}
+      <div className="mb-8">
+        <Button variant="ghost" size="sm" className="mb-4" asChild>
+          <Link href="/staff-login">
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back to Staff Portal
+          </Link>
+        </Button>
+        
+        <div className="flex items-center justify-between">
+          <div>
+            <div className="flex items-center gap-3 mb-2">
+              <h1 className="text-4xl font-bold">Staff Tools</h1>
+              <Badge className={`${
+                currentLevel.level <= 2 
+                  ? 'bg-gradient-to-r from-[#A92FFA] to-[#F28C28]' 
+                  : 'bg-[#A92FFA]'
+              }`}>
+                {currentLevel.level <= 2 ? (
+                  <Crown className="w-3 h-3 mr-1" />
+                ) : (
+                  <Shield className="w-3 h-3 mr-1" />
+                )}
+                {currentLevel.name}
+              </Badge>
+            </div>
+            <p className="text-muted-foreground">
+              Welcome, {staffTitle || roleName || 'Staff Member'}! Access your authorized tools below.
+            </p>
+          </div>
           
-          <div className="flex items-center justify-between">
-            <div>
-              <div className="flex items-center gap-3 mb-2">
-                <h1 className="text-4xl font-bold">Staff Tools</h1>
-                <Badge className={`${
-                  currentLevel.level <= 2 
-                    ? 'bg-gradient-to-r from-[#A92FFA] to-[#F28C28]' 
-                    : 'bg-[#A92FFA]'
-                }`}>
-                  {currentLevel.level <= 2 ? (
-                    <Crown className="w-3 h-3 mr-1" />
-                  ) : (
-                    <Shield className="w-3 h-3 mr-1" />
-                  )}
-                  {currentLevel.name}
-                </Badge>
+          {/* Clearance Info Card */}
+          <Card className="border-2 border-[#A92FFA]/20 w-72">
+            <CardContent className="pt-4 pb-3">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-sm text-muted-foreground">Your Access</span>
+                <div className="flex gap-2">
+                  <Badge variant="outline" className="text-xs bg-[#A92FFA]/10">
+                    P: {permissionClearance}
+                  </Badge>
+                  <Badge variant="outline" className="text-xs bg-[#F28C28]/10">
+                    D: {dutyClearance}
+                  </Badge>
+                  <Badge variant="outline" className="text-xs bg-blue-500/10">
+                    L: {currentLevel.level}
+                  </Badge>
+                </div>
               </div>
-              <p className="text-muted-foreground">
-                Welcome, {staffTitle || roleName || 'Staff Member'}! Access your authorized tools below.
+              <div className="w-full bg-muted rounded-full h-2">
+                <div 
+                  className="bg-gradient-to-r from-[#A92FFA] to-[#F28C28] h-2 rounded-full transition-all duration-500"
+                  style={{ width: `${permissionClearance}%` }}
+                />
+              </div>
+              <p className="text-xs text-muted-foreground mt-2 text-center">
+                {totalVisibleTools} of {totalTools} tools available
               </p>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+
+      {/* Limited Access Notice */}
+      {totalVisibleTools < totalTools && (
+        <Alert className="mb-6 border-[#F28C28]/30 bg-[#F28C28]/5">
+          <Eye className="h-4 w-4 text-[#F28C28]" />
+          <AlertTitle className="text-[#F28C28]">Limited Tool Access</AlertTitle>
+          <AlertDescription>
+            Some tools are hidden based on your permission clearance ({permissionClearance}), 
+            duty clearance ({dutyClearance}), and level ({currentLevel.level}). 
+            Contact your supervisor for elevated access if needed.
+          </AlertDescription>
+        </Alert>
+      )}
+
+      {/* No Tools Available */}
+      {totalVisibleTools === 0 && (
+        <Card className="border-2 border-dashed border-muted-foreground/30">
+          <CardContent className="py-12 text-center">
+            <EyeOff className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+            <h3 className="text-xl font-semibold mb-2">No Tools Available</h3>
+            <p className="text-muted-foreground mb-4">
+              You don't have access to any staff tools based on your current clearance levels.
+            </p>
+            <Button variant="outline" asChild>
+              <Link href="/contact">Contact Support</Link>
+            </Button>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Tools by Category */}
+      {Object.entries(CATEGORY_INFO).map(([category, info]) => {
+        const tools = visibleToolsByCategory[category];
+        if (!tools || tools.length === 0) return null;
+
+        const CategoryIcon = info.icon;
+
+        return (
+          <div key={category} className="mb-8">
+            <div className="flex items-center gap-3 mb-4">
+              <div className={`${info.color} text-white p-2 rounded-lg`}>
+                <CategoryIcon className="w-5 h-5" />
+              </div>
+              <h2 className="text-2xl font-bold">{info.label}</h2>
+              <Badge variant="outline">{tools.length} tool{tools.length !== 1 ? 's' : ''}</Badge>
             </div>
             
-            {/* Clearance Info Card */}
-            <Card className="border-2 border-[#A92FFA]/20 w-72">
-              <CardContent className="pt-4 pb-3">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm text-muted-foreground">Your Access</span>
-                  <div className="flex gap-2">
-                    <Badge variant="outline" className="text-xs bg-[#A92FFA]/10">
-                      P: {permissionClearance}
-                    </Badge>
-                    <Badge variant="outline" className="text-xs bg-[#F28C28]/10">
-                      D: {dutyClearance}
-                    </Badge>
-                    <Badge variant="outline" className="text-xs bg-blue-500/10">
-                      L: {currentLevel.level}
-                    </Badge>
-                  </div>
-                </div>
-                <div className="w-full bg-muted rounded-full h-2">
-                  <div 
-                    className="bg-gradient-to-r from-[#A92FFA] to-[#F28C28] h-2 rounded-full transition-all duration-500"
-                    style={{ width: `${permissionClearance}%` }}
-                  />
-                </div>
-                <p className="text-xs text-muted-foreground mt-2 text-center">
-                  {totalVisibleTools} of {totalTools} tools available
-                </p>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-
-        {/* Limited Access Notice */}
-        {totalVisibleTools < totalTools && (
-          <Alert className="mb-6 border-[#F28C28]/30 bg-[#F28C28]/5">
-            <Eye className="h-4 w-4 text-[#F28C28]" />
-            <AlertTitle className="text-[#F28C28]">Limited Tool Access</AlertTitle>
-            <AlertDescription>
-              Some tools are hidden based on your permission clearance ({permissionClearance}), 
-              duty clearance ({dutyClearance}), and level ({currentLevel.level}). 
-              Contact your supervisor for elevated access if needed.
-            </AlertDescription>
-          </Alert>
-        )}
-
-        {/* No Tools Available */}
-        {totalVisibleTools === 0 && (
-          <Card className="border-2 border-dashed border-muted-foreground/30">
-            <CardContent className="py-12 text-center">
-              <EyeOff className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-              <h3 className="text-xl font-semibold mb-2">No Tools Available</h3>
-              <p className="text-muted-foreground mb-4">
-                You don't have access to any staff tools based on your current clearance levels.
-              </p>
-              <Button variant="outline" asChild>
-                <Link href="/contact">Contact Support</Link>
-              </Button>
-            </CardContent>
-          </Card>
-        )}
-
-        {/* Tools by Category */}
-        {Object.entries(CATEGORY_INFO).map(([category, info]) => {
-          const tools = visibleToolsByCategory[category];
-          if (!tools || tools.length === 0) return null;
-
-          const CategoryIcon = info.icon;
-
-          return (
-            <div key={category} className="mb-8">
-              <div className="flex items-center gap-3 mb-4">
-                <div className={`${info.color} text-white p-2 rounded-lg`}>
-                  <CategoryIcon className="w-5 h-5" />
-                </div>
-                <h2 className="text-2xl font-bold">{info.label}</h2>
-                <Badge variant="outline">{tools.length} tool{tools.length !== 1 ? 's' : ''}</Badge>
-              </div>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {tools.map((tool) => {
-                  const ToolIcon = tool.icon;
-                  return (
-                    <Link
-                      key={tool.id}
-                      href={tool.href}
-                      className="group"
-                    >
-                      <Card className="h-full hover:border-[#A92FFA]/50 hover:shadow-lg transition-all duration-200 group-hover:scale-[1.02]">
-                        <CardHeader className="pb-2">
-                          <div className="flex items-start justify-between">
-                            <div className={`${info.color} text-white p-3 rounded-lg`}>
-                              <ToolIcon className="w-6 h-6" />
-                            </div>
-                            <Badge variant="secondary" className="text-xs">
-                              L{tool.minLevel}+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {tools.map((tool) => {
+                const ToolIcon = tool.icon;
+                return (
+                  <Link
+                    key={tool.id}
+                    href={tool.href}
+                    className="group"
+                  >
+                    <Card className="h-full hover:border-[#A92FFA]/50 hover:shadow-lg transition-all duration-200 group-hover:scale-[1.02]">
+                      <CardHeader className="pb-2">
+                        <div className="flex items-start justify-between">
+                          <div className={`${info.color} text-white p-3 rounded-lg`}>
+                            <ToolIcon className="w-6 h-6" />
+                          </div>
+                          <Badge variant="secondary" className="text-xs">
+                            L{tool.minLevel}+
+                          </Badge>
+                        </div>
+                        <CardTitle className="text-lg mt-3">{tool.title}</CardTitle>
+                        <CardDescription>{tool.description}</CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="flex gap-2 flex-wrap">
+                          {tool.minPermissionClearance > 0 && (
+                            <Badge variant="outline" className="text-xs bg-[#A92FFA]/5">
+                              P≥{tool.minPermissionClearance}
                             </Badge>
-                          </div>
-                          <CardTitle className="text-lg mt-3">{tool.title}</CardTitle>
-                          <CardDescription>{tool.description}</CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                          <div className="flex gap-2 flex-wrap">
-                            {tool.minPermissionClearance > 0 && (
-                              <Badge variant="outline" className="text-xs bg-[#A92FFA]/5">
-                                P≥{tool.minPermissionClearance}
-                              </Badge>
-                            )}
-                            {tool.minDutyClearance > 0 && (
-                              <Badge variant="outline" className="text-xs bg-[#F28C28]/5">
-                                D≥{tool.minDutyClearance}
-                              </Badge>
-                            )}
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </Link>
-                  );
-                })}
-              </div>
+                          )}
+                          {tool.minDutyClearance > 0 && (
+                            <Badge variant="outline" className="text-xs bg-[#F28C28]/5">
+                              D≥{tool.minDutyClearance}
+                            </Badge>
+                          )}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </Link>
+                );
+              })}
             </div>
-          );
-        })}
+          </div>
+        );
+      })}
 
-        {/* Hidden Tools Count */}
-        {totalVisibleTools < totalTools && totalVisibleTools > 0 && (
-          <Card className="mt-8 border-dashed">
-            <CardContent className="py-6">
-              <div className="flex items-center gap-3 justify-center text-muted-foreground">
-                <EyeOff className="w-5 h-5" />
-                <span>
-                  {totalTools - totalVisibleTools} additional tool{totalTools - totalVisibleTools !== 1 ? 's' : ''} require higher clearance
-                </span>
-              </div>
-            </CardContent>
-          </Card>
-        )}
-      </div>
-      <Footer />
+      {/* Hidden Tools Count */}
+      {totalVisibleTools < totalTools && totalVisibleTools > 0 && (
+        <Card className="mt-8 border-dashed">
+          <CardContent className="py-6">
+            <div className="flex items-center gap-3 justify-center text-muted-foreground">
+              <EyeOff className="w-5 h-5" />
+              <span>
+                {totalTools - totalVisibleTools} additional tool{totalTools - totalVisibleTools !== 1 ? 's' : ''} require higher clearance
+              </span>
+            </div>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 }

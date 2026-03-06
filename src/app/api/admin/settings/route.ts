@@ -10,6 +10,7 @@ const ALLOWED_KEYS = [
   "maintenance_message",
   "maintenance_reason",
   "maintenance_estimated_end",
+  "recovery_banner_enabled",
   "public_prayer_wall",
   "online_registrations",
 ] as const;
@@ -45,6 +46,7 @@ export async function GET() {
       maintenance_message: "",
       maintenance_reason: "scheduled",
       maintenance_estimated_end: "",
+      recovery_banner_enabled: "false",
       public_prayer_wall: "true",
       online_registrations: "true",
     };
