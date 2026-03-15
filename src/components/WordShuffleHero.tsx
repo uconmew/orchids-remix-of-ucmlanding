@@ -306,9 +306,22 @@ export default function WordShuffleHero() {
   };
 
   return (
-    <div
-      className="relative flex flex-col justify-center items-center min-h-[50vh] sm:min-h-[60vh] md:min-h-[70vh] overflow-hidden"
-    >
+    <div className="relative flex flex-col justify-center items-center min-h-[50vh] sm:min-h-[60vh] md:min-h-[70vh] overflow-hidden">
+
+      {/* ── Dark scene backdrop — only visible while animation runs ── */}
+      <AnimatePresence>
+        {hasStarted && (
+          <motion.div
+            key="backdrop"
+            className="absolute inset-0 rounded-2xl bg-black"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.6 }}
+          />
+        )}
+      </AnimatePresence>
+
       {/* ── Play button ── */}
       {!hasStarted && (
         <motion.div
@@ -329,7 +342,7 @@ export default function WordShuffleHero() {
 
       {/* ── Word stack — all visible words render simultaneously ── */}
       {hasStarted && (
-        <div className="absolute inset-0 flex items-center justify-center">
+        <div className="absolute inset-0 flex items-center justify-center z-10">
           <AnimatePresence>
             {visibleWords.map(({ id, text }) => {
               const isJesus = text === "JESUS.";
@@ -337,8 +350,6 @@ export default function WordShuffleHero() {
               return (
                 <motion.span
                   key={id}
-                  // ── JESUS grows from 2x → 1x with cubic-bezier overshoot ──
-                  // ── All other words: instant on, fade out over resonance window ──
                   initial={
                     isJesus
                       ? { opacity: 1, scale: 2, transformOrigin: "50% 0%" }
@@ -356,12 +367,7 @@ export default function WordShuffleHero() {
                   }
                   transition={
                     isJesus
-                      ? {
-                          scale: {
-                            duration: 3,
-                            ease: [1, 0.024, 1, 1.054],
-                          },
-                        }
+                      ? { scale: { duration: 3, ease: [1, 0.024, 1, 1.054] } }
                       : { duration: 0 }
                   }
                   className={`
@@ -370,7 +376,7 @@ export default function WordShuffleHero() {
                       ? "text-6xl sm:text-7xl md:text-8xl lg:text-9xl xl:text-[10rem] text-white tracking-widest drop-shadow-[0_0_80px_rgba(255,255,255,1)] [text-shadow:0_0_40px_rgba(255,255,255,0.9),0_0_80px_rgba(255,255,255,0.7),0_0_120px_rgba(255,255,255,0.5),0_0_200px_rgba(169,47,250,0.4)]"
                       : text.includes("?")
                       ? "text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl bg-gradient-to-r from-[#A92FFA] to-[#F28C28] bg-clip-text text-transparent drop-shadow-[0_0_30px_rgba(169,47,250,0.6)]"
-                      : "text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl text-foreground"
+                      : "text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl text-white/90"
                     }
                   `}
                 >
@@ -389,7 +395,7 @@ export default function WordShuffleHero() {
       <AnimatePresence>
         {showFinal && (
           <motion.div
-            className="flex flex-col items-center gap-3 sm:gap-4 md:gap-6 max-w-6xl"
+            className="relative z-10 flex flex-col items-center gap-3 sm:gap-4 md:gap-6 max-w-6xl"
             animate={{ opacity: fadeOutFinal ? 0 : 1 }}
             transition={{ duration: 2.5, ease: "easeOut" }}
           >
