@@ -495,13 +495,6 @@ export async function PATCH(request: NextRequest) {
       return NextResponse.json({ error: 'Can only edit pending, approved, or more_info_needed bookings' }, { status: 400 });
     }
 
-    // When user responds to a more_info_needed request, flip back to pending
-    // so staff knows there is a new response to review
-    if (existing[0].status === 'more_info_needed' && userNotes) {
-      updateFields.status = 'pending';
-      updateFields.staffRequirements = null; // clear the requirement — it's been addressed
-    }
-
     // If changing time, re-enforce 24-hour rule
     if (requestedTime && existing[0].status === 'pending') {
       const requestedDate = new Date(requestedTime);
@@ -514,18 +507,26 @@ export async function PATCH(request: NextRequest) {
 
     const { status: newStatus, ...otherFields } = body;
 
+    const updateFields: Record<string, any> = {
+      pickupLocation: pickupLocation || existing[0].pickupLocation,
+      destination: destination || existing[0].destination,
+      requestedTime: requestedTime || existing[0].requestedTime,
+      ridePurpose: ridePurpose || existing[0].ridePurpose,
+      specialNeeds: specialNeeds || existing[0].specialNeeds,
+      userNotes: userNotes || existing[0].userNotes,
+      status: newStatus || existing[0].status,
+      updatedAt: new Date().toISOString(),
+    };
+
+    // When user responds to a more_info_needed request, flip back to pending
+    if (existing[0].status === 'more_info_needed' && userNotes) {
+      updateFields.status = 'pending';
+      updateFields.staffRequirements = null;
+    }
+
     const updated = await db
       .update(transitBookings)
-      .set({
-        pickupLocation: pickupLocation || existing[0].pickupLocation,
-        destination: destination || existing[0].destination,
-        requestedTime: requestedTime || existing[0].requestedTime,
-        ridePurpose: ridePurpose || existing[0].ridePurpose,
-        specialNeeds: specialNeeds || existing[0].specialNeeds,
-        userNotes: userNotes || existing[0].userNotes,
-        status: newStatus || existing[0].status,
-        updatedAt: new Date().toISOString(),
-      })
+      .set(updateFields)
       .where(eq(transitBookings.id, parseInt(id)))
       .returning();
 
