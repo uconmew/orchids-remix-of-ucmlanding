@@ -308,19 +308,10 @@ export default function WordShuffleHero() {
   return (
     <div className="relative flex flex-col justify-center items-center min-h-[50vh] sm:min-h-[60vh] md:min-h-[70vh] overflow-hidden">
 
-      {/* ── Dark scene backdrop — only visible while animation runs ── */}
-      <AnimatePresence>
-        {hasStarted && (
-          <motion.div
-            key="backdrop"
-            className="absolute inset-0 rounded-2xl bg-black"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.6 }}
-          />
-        )}
-      </AnimatePresence>
+      {/* ── Dark scene backdrop — appears instantly so words are always legible ── */}
+      {hasStarted && (
+        <div className="absolute inset-0 z-0 rounded-2xl bg-black" />
+      )}
 
       {/* ── Play button ── */}
       {!hasStarted && (
