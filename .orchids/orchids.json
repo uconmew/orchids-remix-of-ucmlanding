@@ -1,8 +1,8 @@
 {
-  "projectId": "b1586621-3837-41d7-9081-3116d2a1f21e",
+  "projectId": "82245e66-9e6f-41e5-b9a4-e84c2fab8a66",
   "createdAt": 1772669877780,
   "startupCommands": [
-    "npm install; npm run dev"
+    "npm install --legacy-peer-deps; npm run dev -- --turbopack"
   ],
   "templateId": "any",
   "detectedFramework": "nextjs"
