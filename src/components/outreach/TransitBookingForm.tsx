@@ -248,25 +248,23 @@ export default function TransitBookingForm({ onSuccess, onCancel }: TransitBooki
 
       const data = await response.json();
 
-        if (!response.ok) {
-          if (data.requires24hOverride || data.requiresOpenHoursOverride) {
-            setRequires24hOverride(true);
-            // Include error code in message if present
-            const errorMsg = data.code 
-              ? `[${data.code}] ${data.error}` 
-              : data.error;
-            setErrorMessage(errorMsg);
-            setSubmitStatus('error');
-          } else {
-            // Include error code if present
-            const errorMsg = data.code 
-              ? `[${data.code}] ${data.error || 'Failed to submit booking'}` 
-              : (data.error || 'Failed to submit booking');
-            throw new Error(errorMsg);
-          }
-          setIsSubmitting(false);
-          return;
+      // ✅ FIXED: All !response.ok paths now use state setters only — no throw inside the block.
+      // This ensures setIsSubmitting(false) and return always execute on error.
+      if (!response.ok) {
+        if (data.requires24hOverride || data.requiresOpenHoursOverride) {
+          setRequires24hOverride(true);
+          setErrorMessage(data.code ? `[${data.code}] ${data.error}` : data.error);
+        } else {
+          setErrorMessage(
+            data.code
+              ? `[${data.code}] ${data.error || 'Failed to submit booking'}`
+              : (data.error || 'Failed to submit booking')
+          );
         }
+        setSubmitStatus('error');
+        setIsSubmitting(false);
+        return;
+      }
 
       setSubmitStatus('success');
       setRequires24hOverride(false);
@@ -443,174 +441,174 @@ export default function TransitBookingForm({ onSuccess, onCancel }: TransitBooki
                 <User className="w-4 h-4" />
                 Full Name
               </Label>
-                <Input
-                  id="riderName"
-                  placeholder="Your full name"
-                  value={formData.riderName}
-                  onChange={(e) => handleInputChange('riderName', e.target.value)}
-                  readOnly={!!session?.user}
-                  className={session?.user ? "bg-muted cursor-not-allowed" : ""}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="riderPhone" className="flex items-center gap-2">
-                  <Phone className="w-4 h-4" />
-                  Phone Number *
-                </Label>
-                <Input
-                  id="riderPhone"
-                  type="tel"
-                  placeholder="(720) 555-0123"
-                  value={formData.riderPhone}
-                  onChange={(e) => handleInputChange('riderPhone', e.target.value)}
-                  required
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="riderEmail" className="flex items-center gap-2">
-                  <Mail className="w-4 h-4" />
-                  Email
-                </Label>
-                <Input
-                  id="riderEmail"
-                  type="email"
-                  placeholder="your@email.com"
-                  value={formData.riderEmail}
-                  onChange={(e) => handleInputChange('riderEmail', e.target.value)}
-                  readOnly={!!session?.user}
-                  className={session?.user ? "bg-muted cursor-not-allowed" : ""}
-                />
-              </div>
+              <Input
+                id="riderName"
+                placeholder="Your full name"
+                value={formData.riderName}
+                onChange={(e) => handleInputChange('riderName', e.target.value)}
+                readOnly={!!session?.user}
+                className={session?.user ? "bg-muted cursor-not-allowed" : ""}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="riderPhone" className="flex items-center gap-2">
+                <Phone className="w-4 h-4" />
+                Phone Number *
+              </Label>
+              <Input
+                id="riderPhone"
+                type="tel"
+                placeholder="(720) 555-0123"
+                value={formData.riderPhone}
+                onChange={(e) => handleInputChange('riderPhone', e.target.value)}
+                required
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="riderEmail" className="flex items-center gap-2">
+                <Mail className="w-4 h-4" />
+                Email
+              </Label>
+              <Input
+                id="riderEmail"
+                type="email"
+                placeholder="your@email.com"
+                value={formData.riderEmail}
+                onChange={(e) => handleInputChange('riderEmail', e.target.value)}
+                readOnly={!!session?.user}
+                className={session?.user ? "bg-muted cursor-not-allowed" : ""}
+              />
+            </div>
           </div>
 
-            <div className="grid md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="pickupLocation" className="flex items-center gap-2">
-                  <MapPin className="w-4 h-4 text-green-500" />
-                  Pickup Location *
-                </Label>
-                {savedAddresses.length > 0 && (
-                  <Select onValueChange={(val) => handleSelectSavedAddress(val, 'pickupLocation')}>
-                    <SelectTrigger className="mb-2">
-                      <SelectValue placeholder="Select from saved addresses" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {savedAddresses.map((addr) => (
-                        <SelectItem key={addr.id} value={addr.id.toString()}>
-                          <div className="flex items-center gap-2">
-                            {addr.isDefault && <Star className="w-3 h-3 text-amber-500" />}
-                            <Home className="w-3 h-3" />
-                            <span className="font-medium">{addr.label}</span>
-                            <span className="text-muted-foreground text-xs truncate max-w-[200px]">{addr.fullAddress}</span>
-                          </div>
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                )}
-                <div className="relative">
-                  <Input
-                    id="pickupLocation"
-                    placeholder="Full address (e.g., 123 Main St, Denver, CO 80202)"
-                    value={formData.pickupLocation}
-                    onChange={(e) => handleInputChange('pickupLocation', e.target.value)}
-                    onBlur={() => verifyAddress(formData.pickupLocation, 'pickup')}
-                    required
-                    className={pickupVerification ? (pickupVerification.isValid ? 'border-green-500' : 'border-amber-500') : ''}
-                  />
-                  {isVerifyingPickup && <Loader2 className="absolute right-3 top-2.5 w-4 h-4 animate-spin text-muted-foreground" />}
-                  {!isVerifyingPickup && pickupVerification?.isValid && <Check className="absolute right-3 top-2.5 w-4 h-4 text-green-500" />}
-                </div>
-                {pickupVerification && !pickupVerification.isValid && pickupVerification.errors.length > 0 && (
-                  <div className="text-xs space-y-1">
-                    {pickupVerification.errors.map((err, i) => (
-                      <p key={i} className="text-amber-600 flex items-center gap-1">
-                        <AlertCircle className="w-3 h-3" />
-                        [{err.code}] {err.message}
-                      </p>
+          <div className="grid md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="pickupLocation" className="flex items-center gap-2">
+                <MapPin className="w-4 h-4 text-green-500" />
+                Pickup Location *
+              </Label>
+              {savedAddresses.length > 0 && (
+                <Select onValueChange={(val) => handleSelectSavedAddress(val, 'pickupLocation')}>
+                  <SelectTrigger className="mb-2">
+                    <SelectValue placeholder="Select from saved addresses" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {savedAddresses.map((addr) => (
+                      <SelectItem key={addr.id} value={addr.id.toString()}>
+                        <div className="flex items-center gap-2">
+                          {addr.isDefault && <Star className="w-3 h-3 text-amber-500" />}
+                          <Home className="w-3 h-3" />
+                          <span className="font-medium">{addr.label}</span>
+                          <span className="text-muted-foreground text-xs truncate max-w-[200px]">{addr.fullAddress}</span>
+                        </div>
+                      </SelectItem>
                     ))}
-                    {pickupVerification.formattedAddress && (
-                      <div className="mt-2 p-2 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
-                        <p className="text-blue-700 dark:text-blue-300 text-xs font-medium mb-1">Suggested correction:</p>
-                        <Button 
-                          type="button" 
-                          variant="outline" 
-                          size="sm" 
-                          className="w-full text-xs h-auto py-2 px-3 text-left justify-start border-blue-300 hover:bg-blue-100 dark:hover:bg-blue-900/40"
-                          onClick={() => handleUseSuggested('pickup')}
-                        >
-                          <Check className="w-3 h-3 mr-2 flex-shrink-0 text-green-500" />
-                          <span className="truncate">{pickupVerification.formattedAddress}</span>
-                        </Button>
-                      </div>
-                    )}
-                  </div>
-                )}
+                  </SelectContent>
+                </Select>
+              )}
+              <div className="relative">
+                <Input
+                  id="pickupLocation"
+                  placeholder="Full address (e.g., 123 Main St, Denver, CO 80202)"
+                  value={formData.pickupLocation}
+                  onChange={(e) => handleInputChange('pickupLocation', e.target.value)}
+                  onBlur={() => verifyAddress(formData.pickupLocation, 'pickup')}
+                  required
+                  className={pickupVerification ? (pickupVerification.isValid ? 'border-green-500' : 'border-amber-500') : ''}
+                />
+                {isVerifyingPickup && <Loader2 className="absolute right-3 top-2.5 w-4 h-4 animate-spin text-muted-foreground" />}
+                {!isVerifyingPickup && pickupVerification?.isValid && <Check className="absolute right-3 top-2.5 w-4 h-4 text-green-500" />}
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="destination" className="flex items-center gap-2">
-                  <MapPin className="w-4 h-4 text-red-500" />
-                  Destination *
-                </Label>
-                {savedAddresses.length > 0 && (
-                  <Select onValueChange={(val) => handleSelectSavedAddress(val, 'destination')}>
-                    <SelectTrigger className="mb-2">
-                      <SelectValue placeholder="Select from saved addresses" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {savedAddresses.map((addr) => (
-                        <SelectItem key={addr.id} value={addr.id.toString()}>
-                          <div className="flex items-center gap-2">
-                            {addr.isDefault && <Star className="w-3 h-3 text-amber-500" />}
-                            <Home className="w-3 h-3" />
-                            <span className="font-medium">{addr.label}</span>
-                            <span className="text-muted-foreground text-xs truncate max-w-[200px]">{addr.fullAddress}</span>
-                          </div>
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                )}
-                <div className="relative">
-                  <Input
-                    id="destination"
-                    placeholder="Full address (e.g., 456 Oak Ave, Denver, CO 80203)"
-                    value={formData.destination}
-                    onChange={(e) => handleInputChange('destination', e.target.value)}
-                    onBlur={() => verifyAddress(formData.destination, 'destination')}
-                    required
-                    className={destVerification ? (destVerification.isValid ? 'border-green-500' : 'border-amber-500') : ''}
-                  />
-                  {isVerifyingDest && <Loader2 className="absolute right-3 top-2.5 w-4 h-4 animate-spin text-muted-foreground" />}
-                  {!isVerifyingDest && destVerification?.isValid && <Check className="absolute right-3 top-2.5 w-4 h-4 text-green-500" />}
+              {pickupVerification && !pickupVerification.isValid && pickupVerification.errors.length > 0 && (
+                <div className="text-xs space-y-1">
+                  {pickupVerification.errors.map((err, i) => (
+                    <p key={i} className="text-amber-600 flex items-center gap-1">
+                      <AlertCircle className="w-3 h-3" />
+                      [{err.code}] {err.message}
+                    </p>
+                  ))}
+                  {pickupVerification.formattedAddress && (
+                    <div className="mt-2 p-2 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+                      <p className="text-blue-700 dark:text-blue-300 text-xs font-medium mb-1">Suggested correction:</p>
+                      <Button 
+                        type="button" 
+                        variant="outline" 
+                        size="sm" 
+                        className="w-full text-xs h-auto py-2 px-3 text-left justify-start border-blue-300 hover:bg-blue-100 dark:hover:bg-blue-900/40"
+                        onClick={() => handleUseSuggested('pickup')}
+                      >
+                        <Check className="w-3 h-3 mr-2 flex-shrink-0 text-green-500" />
+                        <span className="truncate">{pickupVerification.formattedAddress}</span>
+                      </Button>
+                    </div>
+                  )}
                 </div>
-                {destVerification && !destVerification.isValid && destVerification.errors.length > 0 && (
-                  <div className="text-xs space-y-1">
-                    {destVerification.errors.map((err, i) => (
-                      <p key={i} className="text-amber-600 flex items-center gap-1">
-                        <AlertCircle className="w-3 h-3" />
-                        [{err.code}] {err.message}
-                      </p>
-                    ))}
-                    {destVerification.formattedAddress && (
-                      <div className="mt-2 p-2 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
-                        <p className="text-blue-700 dark:text-blue-300 text-xs font-medium mb-1">Suggested correction:</p>
-                        <Button 
-                          type="button" 
-                          variant="outline" 
-                          size="sm" 
-                          className="w-full text-xs h-auto py-2 px-3 text-left justify-start border-blue-300 hover:bg-blue-100 dark:hover:bg-blue-900/40"
-                          onClick={() => handleUseSuggested('destination')}
-                        >
-                          <Check className="w-3 h-3 mr-2 flex-shrink-0 text-green-500" />
-                          <span className="truncate">{destVerification.formattedAddress}</span>
-                        </Button>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
+              )}
             </div>
+            <div className="space-y-2">
+              <Label htmlFor="destination" className="flex items-center gap-2">
+                <MapPin className="w-4 h-4 text-red-500" />
+                Destination *
+              </Label>
+              {savedAddresses.length > 0 && (
+                <Select onValueChange={(val) => handleSelectSavedAddress(val, 'destination')}>
+                  <SelectTrigger className="mb-2">
+                    <SelectValue placeholder="Select from saved addresses" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {savedAddresses.map((addr) => (
+                      <SelectItem key={addr.id} value={addr.id.toString()}>
+                        <div className="flex items-center gap-2">
+                          {addr.isDefault && <Star className="w-3 h-3 text-amber-500" />}
+                          <Home className="w-3 h-3" />
+                          <span className="font-medium">{addr.label}</span>
+                          <span className="text-muted-foreground text-xs truncate max-w-[200px]">{addr.fullAddress}</span>
+                        </div>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
+              <div className="relative">
+                <Input
+                  id="destination"
+                  placeholder="Full address (e.g., 456 Oak Ave, Denver, CO 80203)"
+                  value={formData.destination}
+                  onChange={(e) => handleInputChange('destination', e.target.value)}
+                  onBlur={() => verifyAddress(formData.destination, 'destination')}
+                  required
+                  className={destVerification ? (destVerification.isValid ? 'border-green-500' : 'border-amber-500') : ''}
+                />
+                {isVerifyingDest && <Loader2 className="absolute right-3 top-2.5 w-4 h-4 animate-spin text-muted-foreground" />}
+                {!isVerifyingDest && destVerification?.isValid && <Check className="absolute right-3 top-2.5 w-4 h-4 text-green-500" />}
+              </div>
+              {destVerification && !destVerification.isValid && destVerification.errors.length > 0 && (
+                <div className="text-xs space-y-1">
+                  {destVerification.errors.map((err, i) => (
+                    <p key={i} className="text-amber-600 flex items-center gap-1">
+                      <AlertCircle className="w-3 h-3" />
+                      [{err.code}] {err.message}
+                    </p>
+                  ))}
+                  {destVerification.formattedAddress && (
+                    <div className="mt-2 p-2 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+                      <p className="text-blue-700 dark:text-blue-300 text-xs font-medium mb-1">Suggested correction:</p>
+                      <Button 
+                        type="button" 
+                        variant="outline" 
+                        size="sm" 
+                        className="w-full text-xs h-auto py-2 px-3 text-left justify-start border-blue-300 hover:bg-blue-100 dark:hover:bg-blue-900/40"
+                        onClick={() => handleUseSuggested('destination')}
+                      >
+                        <Check className="w-3 h-3 mr-2 flex-shrink-0 text-green-500" />
+                        <span className="truncate">{destVerification.formattedAddress}</span>
+                      </Button>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
 
           <div className="grid md:grid-cols-3 gap-4">
             <div className="space-y-2">
@@ -746,47 +744,47 @@ export default function TransitBookingForm({ onSuccess, onCancel }: TransitBooki
           </div>
 
           {submitStatus === 'error' && (
-              <Alert variant="destructive">
-                <AlertCircle className="w-4 h-4" />
-                <AlertDescription>{errorMessage}</AlertDescription>
-              </Alert>
-            )}
+            <Alert variant="destructive">
+              <AlertCircle className="w-4 h-4" />
+              <AlertDescription>{errorMessage}</AlertDescription>
+            </Alert>
+          )}
 
-            {requires24hOverride && (
-              <Card className="border-2 border-amber-500/50 bg-amber-500/5">
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-lg flex items-center gap-2 text-amber-600">
-                    <Key className="w-5 h-5" />
-                    Override Code Required
-                  </CardTitle>
+          {requires24hOverride && (
+            <Card className="border-2 border-amber-500/50 bg-amber-500/5">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-lg flex items-center gap-2 text-amber-600">
+                  <Key className="w-5 h-5" />
+                  Override Code Required
+                </CardTitle>
                 <CardDescription>
-                    {errorMessage || 'An override code is required to complete this booking.'}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  <div className="space-y-2">
-                    <Label htmlFor="overrideCode" className="text-sm font-medium">
-                      4-Digit Override Code
-                    </Label>
-                    <Input
-                      id="overrideCode"
-                      type="text"
-                      maxLength={4}
-                      placeholder="Enter code (e.g., 1234)"
-                      value={overrideCode}
-                      onChange={(e) => setOverrideCode(e.target.value.replace(/\D/g, '').slice(0, 4))}
-                      className="text-center text-2xl tracking-[0.5em] font-mono border-2 border-amber-500/30 focus:border-amber-500"
-                    />
-                  </div>
-                  <div className="text-xs text-muted-foreground space-y-1">
-                    <p>Contact staff at <a href="tel:7206639243" className="text-amber-600 font-medium">720.663.9243</a> or your assigned case worker to obtain an override code for urgent requests.</p>
-                    <p className="text-amber-600 font-semibold">Note: Override codes expire 5 minutes after generation. Staff will provide the exact expiration time.</p>
-                  </div>
-                </CardContent>
-              </Card>
-            )}
+                  {errorMessage || 'An override code is required to complete this booking.'}
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <div className="space-y-2">
+                  <Label htmlFor="overrideCode" className="text-sm font-medium">
+                    4-Digit Override Code
+                  </Label>
+                  <Input
+                    id="overrideCode"
+                    type="text"
+                    maxLength={4}
+                    placeholder="Enter code (e.g., 1234)"
+                    value={overrideCode}
+                    onChange={(e) => setOverrideCode(e.target.value.replace(/\D/g, '').slice(0, 4))}
+                    className="text-center text-2xl tracking-[0.5em] font-mono border-2 border-amber-500/30 focus:border-amber-500"
+                  />
+                </div>
+                <div className="text-xs text-muted-foreground space-y-1">
+                  <p>Contact staff at <a href="tel:7206639243" className="text-amber-600 font-medium">720.663.9243</a> or your assigned case worker to obtain an override code for urgent requests.</p>
+                  <p className="text-amber-600 font-semibold">Note: Override codes expire 5 minutes after generation. Staff will provide the exact expiration time.</p>
+                </div>
+              </CardContent>
+            </Card>
+          )}
 
-            <div className="flex gap-3 pt-4">
+          <div className="flex gap-3 pt-4">
             {onCancel && (
               <Button type="button" variant="outline" onClick={onCancel} className="flex-1">
                 Cancel
