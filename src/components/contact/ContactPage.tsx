@@ -88,7 +88,7 @@ export default function ContactPage() {
     {
       icon: MapPin,
       title: "Location",
-      primary: "123 Hope Street",
+      primary: "2000 S Colorado Blvd T1 Ste 2000",
       secondary: "Denver, CO 80202",
       color: "from-purple-600 to-[#A92FFA]",
       action: "Get Directions"
